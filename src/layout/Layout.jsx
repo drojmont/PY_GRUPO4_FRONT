@@ -9,6 +9,12 @@ const Layout = () => {
         <Outlet />
       </main>
       <Footer/>
+      <p className='border-b-4'>NAVBAR</p>
+      <main className="flex-1 flex flex-col">
+        <Outlet />
+      </main>
+      <p className='border-t-4'>FOOTER</p>
+main
     </div>
   );
 };
