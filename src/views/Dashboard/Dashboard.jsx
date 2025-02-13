@@ -3,9 +3,11 @@ import Sidebar from './components/Sidebar';
 
 const Dashboard = () => {
   return (
+    <div className="flex flex-col flex-1">
     
-    <div className="bg-white grid grid-cols-[auto_1fr] grid-rows-[auto_1fr]">
-      <section className="row-span-2">
+    <div className="flex-1 grid grid-cols-[auto_1fr]">
+      
+      <section className="row-span-2 ">
         <Sidebar />
       </section>
 
@@ -13,7 +15,7 @@ const Dashboard = () => {
         <Outlet />
       </section>
     </div>
-    
+  </div>
   );
 };
 
