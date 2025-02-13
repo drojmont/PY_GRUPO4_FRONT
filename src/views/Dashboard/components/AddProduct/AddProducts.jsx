@@ -6,7 +6,7 @@ import { Link } from "react-router"
 const AddProducts = () => {
   return (
     <div >
-     <Link to={'crear-producto'}><Button className="block ml-auto capitalize">Agregar Producto</Button></Link>
+     <Link to={'crear-producto'}><Button className="block ml-auto bg-green-300 capitalize">Agregar Producto</Button></Link>
      {/* <ProductsTable/> */}
     </div>
   )
