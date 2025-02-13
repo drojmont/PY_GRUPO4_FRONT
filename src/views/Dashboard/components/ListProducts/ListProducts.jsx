@@ -1,8 +1,11 @@
 import ProductsTable from "./components/ProductsTable"
 
 
-export const ListProducts = () => {
+const ListProducts = () => {
   return (
     <div><ProductsTable/></div>
   )
 }
+
+
+export default ListProducts
