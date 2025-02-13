@@ -126,7 +126,7 @@ const Sidebar = () => {
             <ListItemPrefix>
               <UserCircleIcon className="h-5 w-5" />
             </ListItemPrefix>
-          <Link to={'lista-productos'}>Lista de Productos</Link>
+          <Link to={'listar-productos'}>Lista de Productos</Link>
           </ListItem>
           <ListItem>
             <ListItemPrefix>
