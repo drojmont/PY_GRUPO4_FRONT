@@ -7,27 +7,25 @@ import {
   Typography,
 } from '@material-tailwind/react';
 import DefaultImage from '../../../../../assets/imagen-default.jpg';
-import { useEffect, useState } from 'react';
-import data from '../../../../../data/events';
+import {  useState } from 'react';
 import { useNavigate } from 'react-router';
+import useEvents from '../../../../../Hooks/useEvents';
 
 const CreateProduct = () => {
-
-  const [events, setEvents] = useState(data);
+  
+  const { events, addEvent } = useEvents();
   const [images, setImages] = useState(Array(5).fill(DefaultImage));
   const [inputs, setInputs] = useState({
     name: '',
     description: '',
   });
-  const[errors, setErrors]=useState({});
-  const navigate = useNavigate()
+  const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
-    // Cargar eventos desde localStorage al inicio
-    useEffect(() => {
-      const storedEvents = JSON.parse(localStorage.getItem("events"));
-      setEvents(storedEvents);
-    }, []);
-  
+  // useEffect(() => {
+  //   const storedEvents = JSON.parse(localStorage.getItem('events'));
+  //   setEvents(storedEvents);
+  // }, []);
 
   const handleImageChange = (index, event) => {
     const file = event.target.files?.[0];
@@ -51,14 +49,19 @@ const CreateProduct = () => {
       [name]: value,
     });
 
-     
-     if (name === "name") {
+    if (name === 'name') {
       if (!value.trim()) {
-        setErrors((prev) => ({ ...prev, name: "El nombre no puede estar vacío" }));
+        setErrors((prev) => ({
+          ...prev,
+          name: 'El nombre no puede estar vacío',
+        }));
       } else if (events.some((event) => event.name === value)) {
-        setErrors((prev) => ({ ...prev, name: "Este nombre de evento ya existe" }));
+        setErrors((prev) => ({
+          ...prev,
+          name: 'Este nombre de evento ya existe',
+        }));
       } else {
-        setErrors((prev) => ({ ...prev, name: "" }));
+        setErrors((prev) => ({ ...prev, name: '' }));
       }
     }
   };
@@ -67,41 +70,42 @@ const CreateProduct = () => {
     e.preventDefault();
 
     if (!inputs.name.trim()) {
-      setErrors((prev) => ({ ...prev, name: "El nombre no puede estar vacío" }));
+      setErrors((prev) => ({
+        ...prev,
+        name: 'El nombre no puede estar vacío',
+      }));
       return;
     }
 
     if (events.some((event) => event.name === inputs.name)) {
-      setErrors((prev) => ({ ...prev, name: "Este nombre de evento ya existe" }));
+      setErrors((prev) => ({
+        ...prev,
+        name: 'Este nombre de evento ya existe',
+      }));
       return;
     }
     const newProduct = {
-      id:events.length+1,
+      id: events.length + 1,
       name: inputs.name,
       description: inputs.description,
       images: images,
     };
 
-    const verifyName = events.some(event=> event.name === newProduct.name);
-    
-    if(verifyName){
+    const verifyName = events.some((event) => event.name === newProduct.name);
+
+    if (verifyName) {
       setErrors({
-        name:"Este nombre de evento ya existe"
-      })
+        name: 'Este nombre de evento ya existe',
+      });
     }
 
-    const updatedEvents = [...events, newProduct];
-    setEvents(updatedEvents);
+    addEvent(newProduct);
 
-    // Guardar en localStorage
-    localStorage.setItem("events", JSON.stringify(updatedEvents));
-     // Limpiar formulario después de agregar
-     setInputs({ name: "", description: "" });
-     setErrors({});
-    navigate('/administrador')
+    // Limpiar formulario después de agregar
+    setInputs({ name: '', description: '' });
+    setErrors({});
+    navigate('/administrador');
   };
-
-  
 
   return (
     <Card className=" w-max mx-auto flex flex-col items-center shadow-lg pt-3">
@@ -162,7 +166,12 @@ const CreateProduct = () => {
             />
           </div>
 
-          <Button className="mt-6" fullWidth type="submit" disabled={!!errors.name}>
+          <Button
+            className="mt-6"
+            fullWidth
+            type="submit"
+            disabled={!!errors.name}
+          >
             Crear Producto
           </Button>
         </form>

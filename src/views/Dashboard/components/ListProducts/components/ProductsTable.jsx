@@ -19,8 +19,8 @@ import {
   IconButton,
   Tooltip,
 } from '@material-tailwind/react';
-import data from '../../../../../data/events';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import useEvents from '../../../../../Hooks/useEvents';
 
 // const TABS = [
 //   {
@@ -88,8 +88,8 @@ const TABLE_ROWS = [
 ];
 
 const ProductsTable = () => {
-  const [events, setEvents] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+
+  const {events, isLoading}=useEvents()
 
   //Paginación
   const [currentPage, setCurrentPage] = useState(1);
@@ -98,18 +98,7 @@ const ProductsTable = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentEventsPerPage = events?.slice(indexOfFirstItem, indexOfLastItem);
 
-  useEffect(() => {
-    const storedEvents = JSON.parse(localStorage.getItem("events")) || [];
-    if (!storedEvents.length) {
-      localStorage.setItem("events", JSON.stringify(data));
-    }
-    setEvents(storedEvents.length ? storedEvents : data);
-  
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-  }, [data]);
-
+ 
   return (
     <Card className="h-full w-full mx-auto max-w-[900px] border">
       <CardHeader floated={false} shadow={false} className="rounded-none">
