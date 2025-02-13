@@ -1,8 +1,10 @@
-
+import Body from '../components/Body'
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <div>
+      <Body/>
+    </div>
   )
 }
 
