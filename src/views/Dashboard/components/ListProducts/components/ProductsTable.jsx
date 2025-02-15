@@ -65,7 +65,14 @@ const TABLE_ROWS = [
 ];
 
 const ProductsTable = () => {
-  const { events, isLoading } = useEvents();
+  const { events, isLoading, setIsLoading } = useEvents();
+
+  
+  /* Simular una carga de informacion */
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+ 
 
   //Paginación
   const [currentPage, setCurrentPage] = useState(1);

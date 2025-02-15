@@ -20,11 +20,7 @@ const useEvents = () => {
       console.error('Error al traer la información del localstorage', error);
       setError(error);
       setEvents([]);
-    } finally {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
-    }
+    } 
   }, []);
 
   const addEvent = (newEvent) => {
@@ -36,6 +32,7 @@ const useEvents = () => {
   return {
     events,
     isLoading,
+    setIsLoading,
     error,
     addEvent,
   };
