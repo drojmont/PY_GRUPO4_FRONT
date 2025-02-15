@@ -1,89 +1,69 @@
 import {
   Button,
   Card,
-  CardBody,
-  Input,
-  Textarea,
   Typography,
 } from '@material-tailwind/react';
-import DefaultImage from '../../../../../assets/imagen-default.jpg';
-import {  useState } from 'react';
+import DefaultImage from '../../../../../assets/image-default.svg';
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import useEvents from '../../../../../Hooks/useEvents';
+import validationCreateProduct from '../../../../../utils/validationCreateProduct';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import SelectImage from './SelectImage';
+import { TbAlertCircle } from 'react-icons/tb';
 
 const CreateProduct = () => {
-  
   const { events, addEvent } = useEvents();
   const [images, setImages] = useState(Array(5).fill(DefaultImage));
+
   const [inputs, setInputs] = useState({
     name: '',
     description: '',
   });
-  const [errors, setErrors] = useState({});
+  const [error, setError] = useState({});
+  
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const storedEvents = JSON.parse(localStorage.getItem('events'));
-  //   setEvents(storedEvents);
-  // }, []);
-
-  const handleImageChange = (index, event) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const newImages = [...images];
-        newImages[index] = reader.result;
-        setImages(newImages);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
+  /* Handle de los inputs */
   const handleInputsChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
 
-    setInputs({
+    const updatedInputs = {
       ...inputs,
       [name]: value,
-    });
+    };
 
+    setInputs(updatedInputs);
+
+    const newErrors = validationCreateProduct(updatedInputs);
     if (name === 'name') {
-      if (!value.trim()) {
-        setErrors((prev) => ({
-          ...prev,
-          name: 'El nombre no puede estar vacío',
-        }));
-      } else if (events.some((event) => event.name === value)) {
-        setErrors((prev) => ({
-          ...prev,
-          name: 'Este nombre de evento ya existe',
-        }));
+      const nameExists = events.some(
+        (event) => event.name.toLowerCase() === value.toLowerCase()
+      );
+
+      if (nameExists) {
+        newErrors.nameRepeat = 'El nombre ya está en uso';
       } else {
-        setErrors((prev) => ({ ...prev, name: '' }));
+        delete newErrors.nameRepeat;
       }
     }
+
+    setError(newErrors);
   };
 
+  /* Envio del nuevo producto */
   const handleSubmitNewProduct = (e) => {
     e.preventDefault();
 
-    if (!inputs.name.trim()) {
-      setErrors((prev) => ({
-        ...prev,
-        name: 'El nombre no puede estar vacío',
-      }));
+    const errors = validationCreateProduct(inputs);
+
+    if (Object.keys(errors).length > 0) {
+      setError(errors);
       return;
     }
 
-    if (events.some((event) => event.name === inputs.name)) {
-      setErrors((prev) => ({
-        ...prev,
-        name: 'Este nombre de evento ya existe',
-      }));
-      return;
-    }
     const newProduct = {
       id: events.length + 1,
       name: inputs.name,
@@ -91,53 +71,37 @@ const CreateProduct = () => {
       images: images,
     };
 
-    const verifyName = events.some((event) => event.name === newProduct.name);
-
-    if (verifyName) {
-      setErrors({
-        name: 'Este nombre de evento ya existe',
-      });
-    }
-
+    console.log(newProduct);
     addEvent(newProduct);
 
-    // Limpiar formulario después de agregar
+    toast('Nuevo Evento exitosamente creado!', {
+      position: 'top-right',
+      type: 'info',
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
+
+    //resetear formulario y errores
     setInputs({ name: '', description: '' });
-    setErrors({});
-    navigate('/administrador');
+    setError({});
+
+    setTimeout(() => {
+      navigate('/administrador');
+    }, 2000);
   };
 
   return (
-    <Card className=" w-max mx-auto flex flex-col items-center shadow-lg pt-3">
-      <CardBody>
-        <h2 className="font-bold border-b mb-5">Agregar Imagen</h2>
-        <section className="grid grid-cols-3 place-items-center gap-1">
-          {images.map((image, index) => (
-            <div
-              key={index}
-              className={`border rounded-lg relative w-[128px] h-[84px] hover:border-dashed hover:border-2 hover:scale-105 ${
-                index === 0 ? 'row-span-2 h-[176px] w-[135px]' : ''
-              }`}
-            >
-              <label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => handleImageChange(index, e)}
-                />
-                <img
-                  src={image}
-                  alt={`imagen producto ${index}`}
-                  className="w-full h-full object-cover cursor-pointer"
-                />
-              </label>
-            </div>
-          ))}
-        </section>
+    <div className="w-max mx-auto flex flex-col items-center pt-3">
+      <SelectImage images={images} setImages={setImages} />
 
+      <Card className="w-full my-5">
         <form
-          className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
+          className="mt-8 mb-2 w-[90%] max-w-screen-lg mx-auto "
           onSubmit={handleSubmitNewProduct}
         >
           <div className="mb-1 flex flex-col gap-3">
@@ -145,38 +109,54 @@ const CreateProduct = () => {
               Nombre del Evento
             </Typography>
 
-            <Input
-              size="lg"
-              label="Nombre"
+            <input
+              placeholder="Tours de Tecnología"
               name="name"
               onChange={handleInputsChange}
               value={inputs.name}
+              className='placeholder:text-jet placeholder:pl-2 border-2 rounded-lg py-2 px-4'
             />
-            {errors.name && <p className="text-red-500">{errors.name}</p>}
-
+            {error.name && (
+              <p className="text-red-400 flex items-center gap-2">
+                <TbAlertCircle color="red" />
+                {error.name}
+              </p>
+            )}
+            {error.nameRepeat && (
+              <p className="text-red-400 flex items-center gap-2">
+                <TbAlertCircle color="red" />
+                {error.nameRepeat}
+              </p>
+            )}
             <Typography variant="h6" color="blue-gray" className="-mb-3">
               Descripción
             </Typography>
-            <Textarea
-              size="lg"
-              label="Descripción"
+            <textarea
+              placeholder="Evento a nivel mundial.."
               name="description"
               onChange={handleInputsChange}
               value={inputs.description}
+              className='placeholder:text-jet placeholder:pl-2 border-2 rounded-lg pl-4 h-40 py-2'
             />
           </div>
-
+          {error.description && (
+            <p className="text-red-400 flex items-center gap-2">
+              <TbAlertCircle color="red" />
+              {error.description}
+            </p>
+          )}
           <Button
-            className="mt-6"
-            fullWidth
+            className="block mx-auto mt-6 bg-sky capitalize text-[16px]"
             type="submit"
-            disabled={!!errors.name}
+            disabled={Object.keys(error).length > 0}
           >
             Crear Producto
           </Button>
         </form>
-      </CardBody>
-    </Card>
+      </Card>
+
+      <ToastContainer />
+    </div>
   );
 };
 

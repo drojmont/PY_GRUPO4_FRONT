@@ -15,6 +15,7 @@ module.exports = withMT({
         'platinum-two': '#D9D9D9',
         'cadet-gray': '#81929E',
         'indigo-dye': '#284B63',
+        sky: '#35A6B8',
       },
     },
   },

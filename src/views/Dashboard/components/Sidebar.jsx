@@ -8,24 +8,22 @@ import {
   AccordionHeader,
   AccordionBody,
 } from '@material-tailwind/react';
-import {
-  ShoppingBagIcon,
-  InboxIcon,
-  PowerIcon,
-} from '@heroicons/react/24/solid';
-import {/*  ChevronRightIcon, */ ChevronDownIcon } from '@heroicons/react/24/outline';
+import { HiOutlineInbox } from 'react-icons/hi2';
+import { LuShoppingBag } from 'react-icons/lu';
+import { RxExit } from 'react-icons/rx';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { Link, useLocation } from 'react-router';
 import { useState } from 'react';
 
 const menuItems = [
   {
     text: 'Dashboard',
-    icon: <InboxIcon className="h-5 w-5" />,
+    icon: <HiOutlineInbox size={20} />,
     route: '/administrador',
   },
   {
     text: 'Productos',
-    icon: <ShoppingBagIcon className="h-5 w-5" />,
+    icon: <LuShoppingBag size={20} />,
     route: null,
     subItems: [
       { text: 'Lista', route: 'listar-productos' },
@@ -34,7 +32,7 @@ const menuItems = [
   },
   {
     text: 'Salir',
-    icon: <PowerIcon className="h-5 w-5" />,
+    icon: <RxExit size={20} />,
     route: '/',
   },
 ];
@@ -43,14 +41,13 @@ const Sidebar = () => {
   const [open, setOpen] = useState(0);
 
   const { pathname } = useLocation();
-  // console.log(pathname);
 
   const handleOpen = (value) => {
     setOpen(open === value ? 0 : value);
   };
 
   return (
-    <Card className="h-full w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
+    <Card className="h-full w-full max-w-[20rem] p-4 shadow-none ">
       <List>
         {menuItems.map((item, index) =>
           item.subItems ? (
@@ -90,15 +87,7 @@ const Sidebar = () => {
                           : ''
                       }`}
                     >
-                      <ListItem>
-                        <ListItemPrefix>
-                          {/* <ChevronRightIcon
-                            strokeWidth={3}
-                            className="h-3 w-5"
-                          /> */}
-                        </ListItemPrefix>
-                        {subItem.text}
-                      </ListItem>
+                      <ListItem className='pl-14'>{subItem.text}</ListItem>
                     </Link>
                   ))}
                 </List>
