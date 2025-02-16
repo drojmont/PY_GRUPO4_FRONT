@@ -1,29 +1,32 @@
-import {
-  Button,
-  Card,
-  Typography,
-} from '@material-tailwind/react';
-import DefaultImage from '../../../../../assets/image-default.svg';
-import { useState } from 'react';
+import { Button, Card, Typography } from '@material-tailwind/react';
+import DefaultImage from '@assets/image-default.svg';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import useEvents from '../../../../../Hooks/useEvents';
 import validationCreateProduct from '../../../../../utils/validationCreateProduct';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import SelectImage from './SelectImage';
 import { TbAlertCircle } from 'react-icons/tb';
 import { v4 as uuidv4 } from 'uuid';
+import ImageUploader from './ImageUploader';
 
 const CreateProduct = () => {
   const { events, addEvent } = useEvents();
-  const [images, setImages] = useState(Array(5).fill(DefaultImage));
+  const [images, setImages] = useState(
+    Array(5)
+      .fill(null)
+      .map(() => ({
+        preview: DefaultImage,
+        isDefault: true,
+      }))
+  );
 
   const [inputs, setInputs] = useState({
     name: '',
     description: '',
   });
   const [error, setError] = useState({});
-  
+
   const navigate = useNavigate();
 
   /* Handle de los inputs */
@@ -54,22 +57,31 @@ const CreateProduct = () => {
     setError(newErrors);
   };
 
+  
+ 
   /* Envio del nuevo producto */
   const handleSubmitNewProduct = (e) => {
     e.preventDefault();
 
     const errors = validationCreateProduct(inputs);
 
+    if (images.some((image) => image.isDefault)) {
+      errors.images = "Debes agregar 5 imágenes para tu evento";
+    }
+
     if (Object.keys(errors).length > 0) {
       setError(errors);
       return;
     }
 
+    const imageUrls = images.map((image) => image.preview);
+    console.log(imageUrls)
+
     const newProduct = {
-      id: uuidv4().slice(0,4),
+      id: uuidv4().slice(0, 4),
       name: inputs.name,
       description: inputs.description,
-      images: images,
+      images: imageUrls,
     };
 
     console.log(newProduct);
@@ -87,7 +99,6 @@ const CreateProduct = () => {
       theme: 'light',
     });
 
-    
     setInputs({ name: '', description: '' });
     setError({});
 
@@ -96,9 +107,27 @@ const CreateProduct = () => {
     }, 2000);
   };
 
+
+  useEffect(() => {
+    if (images.every((img) => !img.isDefault)) {
+      setError((prev) => {
+        const newError = { ...prev };
+        delete newError.images;
+        return newError
+      });
+    }
+  }, [images]);
+
+
+
   return (
     <div className="w-max mx-auto flex flex-col items-center pt-3">
-      <SelectImage images={images} setImages={setImages} />
+       <ImageUploader
+        images={images}
+        setImages={setImages}
+        error={error}
+        setError={setError}
+      />
 
       <Card className="w-full my-5">
         <form
@@ -115,7 +144,7 @@ const CreateProduct = () => {
               name="name"
               onChange={handleInputsChange}
               value={inputs.name}
-              className='placeholder:text-jet placeholder:pl-2 border-2 rounded-lg py-2 px-4'
+              className="placeholder:text-jet placeholder:pl-2 border-2 rounded-lg py-2 px-4"
             />
             {error.name && (
               <p className="text-red-400 flex items-center gap-2">
@@ -137,7 +166,7 @@ const CreateProduct = () => {
               name="description"
               onChange={handleInputsChange}
               value={inputs.description}
-              className='placeholder:text-jet placeholder:pl-2 border-2 rounded-lg pl-4 h-40 py-2'
+              className="placeholder:text-jet placeholder:pl-2 border-2 rounded-lg pl-4 h-40 py-2"
             />
           </div>
           {error.description && (
