@@ -19,7 +19,7 @@ const menuItems = [
   {
     text: 'Dashboard',
     icon: <HiOutlineInbox size={20} />,
-    route: '/administrador',
+    route: '/administracion',
   },
   {
     text: 'Productos',

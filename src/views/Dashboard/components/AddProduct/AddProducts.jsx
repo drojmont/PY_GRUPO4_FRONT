@@ -6,7 +6,7 @@ import ProductsTable from '../ListProducts/components/ProductsTable';
 const AddProducts = () => {
   return (
     <section className="flex flex-col gap-5">
-      <article className="flex justify-between pt-4">
+      <article className="flex justify-between pt-4 w-full max-w-[898px] mx-auto">
         <div className="flex flex-row-reverse gap-2">
           <h2 className="text-4xl font-semibold tracking-wide">Dashboard</h2>
           <HiOutlineInbox size={40} />
