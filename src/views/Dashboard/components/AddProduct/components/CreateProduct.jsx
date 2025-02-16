@@ -12,6 +12,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SelectImage from './SelectImage';
 import { TbAlertCircle } from 'react-icons/tb';
+import { v4 as uuidv4 } from 'uuid';
 
 const CreateProduct = () => {
   const { events, addEvent } = useEvents();
@@ -65,7 +66,7 @@ const CreateProduct = () => {
     }
 
     const newProduct = {
-      id: events.length + 1,
+      id: uuidv4().slice(0,4),
       name: inputs.name,
       description: inputs.description,
       images: images,
@@ -86,7 +87,7 @@ const CreateProduct = () => {
       theme: 'light',
     });
 
-    //resetear formulario y errores
+    
     setInputs({ name: '', description: '' });
     setError({});
 

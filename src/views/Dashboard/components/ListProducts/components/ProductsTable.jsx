@@ -66,13 +66,12 @@ const TABLE_ROWS = [
 
 const ProductsTable = () => {
   const { events, isLoading, setIsLoading } = useEvents();
+  const [eventId, setEventId] = useState(null);
 
-  
   /* Simular una carga de informacion */
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
- 
+  setTimeout(() => {
+    setIsLoading(false);
+  }, 2000);
 
   //Paginación
   const [currentPage, setCurrentPage] = useState(1);
@@ -83,6 +82,11 @@ const ProductsTable = () => {
   const currentEventsPerPage = events?.slice(indexOfFirstItem, indexOfLastItem);
 
   const [openModal, setOpenModal] = useState(false);
+
+  const handleGetIdDeleteIcon = (id) => {
+    setEventId(id);
+    setOpenModal(true);
+  };
 
   return (
     <Card className="h-full w-full mx-auto max-w-[900px] border mb-5">
@@ -163,7 +167,7 @@ const ProductsTable = () => {
                       >
                         <IconButton
                           variant="text"
-                          onClick={() => setOpenModal(true)}
+                          onClick={() => handleGetIdDeleteIcon(id)}
                         >
                           <LuTrash2 size={16} />
                         </IconButton>
@@ -185,7 +189,12 @@ const ProductsTable = () => {
         />
       </CardFooter>
       {/* Componente del modal para eliminar un producto */}
-      <DeleteModal open={openModal} onClose={() => setOpenModal(false)} />
+      <DeleteModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        eventId={eventId}
+        setOpenModal={setOpenModal}
+      />
     </Card>
   );
 };
