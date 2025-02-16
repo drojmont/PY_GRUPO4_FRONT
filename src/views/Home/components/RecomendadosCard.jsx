@@ -1,11 +1,6 @@
 import React from "react";
 
 const RecomendadosCard = ({ event }) => {
-  console.log(event);
-  console.log(event.name);
-  console.log(event.description);
-  console.log(event.images[0]);
-
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden">
       <div className="flex flex-col sm:flex-row">
