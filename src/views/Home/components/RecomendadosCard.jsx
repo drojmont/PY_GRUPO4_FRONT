@@ -1,9 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const RecomendadosCard = ({ event }) => {
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-      <div className="flex flex-col sm:flex-row">
+      <Link to={`/Detail/${event.id}`} className="flex flex-col sm:flex-row">
         <div className="sm:w-1/3 bg-gray-200 h-48 sm:h-40 flex-shrink-0">
           <img
             src={event.images[0]}
@@ -21,7 +22,7 @@ const RecomendadosCard = ({ event }) => {
             </div>
           </div>
         </div>
-      </div>
+      </Link>
     </div>
   );
 };
