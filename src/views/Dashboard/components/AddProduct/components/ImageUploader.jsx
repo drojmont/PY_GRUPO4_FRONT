@@ -67,7 +67,7 @@ export default function ImageUploader({ images, setImages, error }) {
     remainingSlots === 1 ? "imagen restante" : "imágenes restantes";
   
   return (
-    <div className="p-4 border rounded-lg shadow-md bg-white">
+    <div className="w-full max-w-[600px] p-4 border rounded-lg shadow-md bg-white">
       <div className="flex justify-between items-center">
         <h2 className="font-bold text-lg mb-2">Agregar Imagen</h2>
         <p className="text-sm text-gray-500 mb-2">
@@ -77,7 +77,7 @@ export default function ImageUploader({ images, setImages, error }) {
 
       <div
         {...getRootProps()}
-        className={`border-2 border-dashed p-6 text-center cursor-pointer mb-4 ${
+        className={`border-2 border-dashed border-gray-400 p-6 text-center cursor-pointer mb-4 ${
           remainingSlots === 0 ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >
@@ -93,8 +93,8 @@ export default function ImageUploader({ images, setImages, error }) {
         {images.map((image, index) => (
           <div
             key={index}
-            className={`border rounded-lg relative group w-[135px] h-[110px] overflow-hidden hover:border-dashed hover:border-2 hover:scale-105 ${
-              index === 0 ? "row-span-2 h-[224px] w-[180px]" : ""
+            className={`border rounded-lg relative group w-[120px] lg:w-[135px] h-[110px] overflow-hidden hover:border-gray-400 hover:border-dashed hover:border-2 hover:scale-105 ${
+              index === 0 ? "row-span-2 h-[224px] w-[160px] lg:w-[180px]" : ""
             }`}
           >
             <label>

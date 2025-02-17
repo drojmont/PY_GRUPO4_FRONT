@@ -121,7 +121,7 @@ const CreateProduct = () => {
 
 
   return (
-    <div className="w-max mx-auto flex flex-col items-center pt-3">
+    <div className="w-full mx-auto flex flex-col items-center pt-3">
        <ImageUploader
         images={images}
         setImages={setImages}
@@ -129,7 +129,7 @@ const CreateProduct = () => {
         setError={setError}
       />
 
-      <Card className="w-full my-5">
+      <Card className="w-full max-w-[600px] my-5">
         <form
           className="mt-8 mb-2 w-[90%] max-w-screen-lg mx-auto "
           onSubmit={handleSubmitNewProduct}
