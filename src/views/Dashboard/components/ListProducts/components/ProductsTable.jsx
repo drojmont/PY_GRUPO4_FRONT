@@ -90,8 +90,8 @@ const ProductsTable = () => {
 
   return (
     <Card className="h-full w-full mx-auto max-w-[900px] border mb-5">
-      <CardBody className="max-h-[540px] overflow-hidden p-0 ">
-        <table className=" w-full min-w-max table-auto text-left ">
+      <CardBody className="max-h-[540px] overflow-hidden  overflow-x-auto p-0 ">
+        <table className=" w-full min-w-max table-auto text-left">
           <thead>
             <tr>
               {TABLE_HEAD.map((head) => (

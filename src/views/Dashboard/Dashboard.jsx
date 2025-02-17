@@ -5,7 +5,7 @@ import { FaRegFaceGrimace } from 'react-icons/fa6';
 
 const Dashboard = () => {
   return (
-    <div className="flex flex-col justify-center md:justify-start flex-1 w-full max-w-screen-2xl mx-auto">
+    <div className=" flex flex-col justify-center md:justify-start flex-1 w-full max-w-screen-2xl mx-auto">
 
       <Card className="bg-anti-flash-white shadow-lg border-b-4 border-platinum-two p-5 w-11/12 flex flex-col justify-center items-center gap-3 mx-auto my-5 md:hidden">
         <h2 className="text-jet font-bold text-xl text-center ">
@@ -20,7 +20,7 @@ const Dashboard = () => {
           <Sidebar />
         </section>
 
-        <section className="row-span-2 p-3">
+        <section className="row-span-2 p-3 overflow-hidden">
           <Outlet />
         </section>
       </div>
