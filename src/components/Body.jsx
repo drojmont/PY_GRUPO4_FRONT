@@ -2,6 +2,7 @@ import fotoFondo from "../assets/imagenBG.jpg";
 import fotoImage from "../assets/imagen-default.jpg";
 import React, { useState } from "react";
 import RecomendadosHome from "../views/Home/components/RecomendadosHome";
+import { Link } from "react-router-dom";
 
 const Body = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -108,7 +109,10 @@ const Body = () => {
       <section className="mb-12">
         <h2 className="text-lg font-medium text-gray-700 mb-4">Categorías</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 md:flex-nowrap gap-4">
-          <div className="rounded-lg overflow-hidden shadow-sm">
+          <Link
+            to={`/Detail/${event.id}`}
+            className="rounded-lg overflow-hidden shadow-sm"
+          >
             <div className="bg-gray-200 h-48 w-full">
               <img
                 src={fotoImage}
@@ -120,9 +124,12 @@ const Body = () => {
               <h3 className="text-gray-700 font-medium">Nombre</h3>
               <p className="text-sm text-gray-500">Descripción</p>
             </div>
-          </div>
+          </Link>
 
-          <div className="rounded-lg overflow-hidden shadow-sm">
+          <Link
+            to={`/Detail/${event.id}`}
+            className="rounded-lg overflow-hidden shadow-sm"
+          >
             <div className="bg-gray-200 h-48 w-full">
               <img
                 src={fotoImage}
@@ -134,8 +141,11 @@ const Body = () => {
               <h3 className="text-gray-700 font-medium">Nombre</h3>
               <p className="text-sm text-gray-500">Descripción</p>
             </div>
-          </div>
-          <div className="rounded-lg overflow-hidden shadow-sm">
+          </Link>
+          <Link
+            to={`/Detail/${event.id}`}
+            className="rounded-lg overflow-hidden shadow-sm"
+          >
             <div className="bg-gray-200 h-48 w-full">
               <img
                 src={fotoImage}
@@ -147,8 +157,11 @@ const Body = () => {
               <h3 className="text-gray-700 font-medium">Nombre</h3>
               <p className="text-sm text-gray-500">Descripción</p>
             </div>
-          </div>
-          <div className="rounded-lg overflow-hidden shadow-sm">
+          </Link>
+          <Link
+            to={`/Detail/${event.id}`}
+            className="rounded-lg overflow-hidden shadow-sm"
+          >
             <div className="bg-gray-200 h-48 w-full">
               <img
                 src={fotoImage}
@@ -160,8 +173,11 @@ const Body = () => {
               <h3 className="text-gray-700 font-medium">Nombre</h3>
               <p className="text-sm text-gray-500">Descripción</p>
             </div>
-          </div>
-          <div className="rounded-lg overflow-hidden shadow-sm">
+          </Link>
+          <Link
+            to={`/Detail/${event.id}`}
+            className="rounded-lg overflow-hidden shadow-sm"
+          >
             <div className="bg-gray-200 h-48 w-full">
               <img
                 src={fotoImage}
@@ -173,7 +189,7 @@ const Body = () => {
               <h3 className="text-gray-700 font-medium">Nombre</h3>
               <p className="text-sm text-gray-500">Descripción</p>
             </div>
-          </div>
+          </Link>
         </div>
       </section>
 
