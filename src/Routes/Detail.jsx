@@ -1,22 +1,38 @@
+import { useParams, useNavigate } from "react-router-dom";
+import useEvents from "../Hooks/useEvents";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import fotoImage from "../assets/imagen-default.jpg";
-import events from "../data/events";
+import Gallery from "../components/Gallery";
 
 const Detail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { events } = useEvents();
+  const [currentEvent, setCurrentEvent] = useState(null);
+
+  useEffect(() => {
+    // Convertimos ambos a string para asegurar una comparación correcta
+    const foundEvent = events.find(event => String(event.id) === String(id));
+    setCurrentEvent(foundEvent);
+  }, [id, events]);
+
   const goBack = () => {
     navigate(-1);
   };
-  const [event, setEvent] = useState(null);
-  useEffect(() => {
-    const fetchedEvent = events.find((e) => e.id === Number(id));
-    setEvent(fetchedEvent || {});
-  }, [id]);
 
-  if (!event) {
-    return <p>Cargando...</p>;
+  if (!currentEvent) {
+    return (
+      <div className="w-full mt-[40px] p-4">
+        <div className="max-w-6xl mx-auto text-center">
+          <p className="text-lg text-gray-700 mb-4">Evento no encontrado</p>
+          <button 
+            onClick={goBack}
+            className="bg-[#35A6B8] text-white px-6 py-2 rounded-lg hover:bg-[#2d8b9a] transition-colors"
+          >
+            Volver
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -24,7 +40,9 @@ const Detail = () => {
       <div className="w-full mt-[40px]">
         {/* Header */}
         <div className="w-full flex justify-between items-center bg-[#35A6B8] p-4">
-          <h2 className="text-lg font-semibold  text-white">{event.name}</h2>
+          <h2 className="text-lg font-semibold text-white">
+            {currentEvent.name}
+          </h2>
           <img
             src="/arrow-circle-left-svgrepo-com.svg"
             alt="Volver"
@@ -34,18 +52,21 @@ const Detail = () => {
         </div>
 
         {/* Body */}
-        <div className="p-4 flex flex-col items-center">
-          <img
-            src={event.images[0] || fotoImage}
-            alt={event.name}
-            className="w-64 h-64 object-cover"
-          />
-          <p className="text-gray-700 text-left w-full max-w-lg mt-4">
-            {event.description}
-          </p>
+        <div className="p-4">
+          <div className="max-w-6xl mx-auto">
+            <Gallery images={currentEvent.images} />
+            
+            <div className="mt-8">
+              <h3 className="text-xl font-semibold mb-4">Descripción</h3>
+              <p className="text-gray-700">
+                {currentEvent.description}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </>
   );
 };
+
 export default Detail;

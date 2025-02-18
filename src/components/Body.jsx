@@ -117,8 +117,7 @@ const Body = () => {
               />
             </div>
             <div className="p-4 bg-white">
-              <h3 className="text-gray-700 font-medium">Nombre</h3>
-              <p className="text-sm text-gray-500">Descripción</p>
+              <h3 className="text-gray-700 font-medium">Nombre Categoria</h3>
             </div>
           </div>
 
@@ -131,8 +130,7 @@ const Body = () => {
               />
             </div>
             <div className="p-4 bg-white">
-              <h3 className="text-gray-700 font-medium">Nombre</h3>
-              <p className="text-sm text-gray-500">Descripción</p>
+              <h3 className="text-gray-700 font-medium">Nombre Categoria</h3>
             </div>
           </div>
           <div className="rounded-lg overflow-hidden shadow-sm">
@@ -144,8 +142,7 @@ const Body = () => {
               />
             </div>
             <div className="p-4 bg-white">
-              <h3 className="text-gray-700 font-medium">Nombre</h3>
-              <p className="text-sm text-gray-500">Descripción</p>
+              <h3 className="text-gray-700 font-medium">Nombre Categoria</h3>
             </div>
           </div>
           <div className="rounded-lg overflow-hidden shadow-sm">
@@ -157,8 +154,7 @@ const Body = () => {
               />
             </div>
             <div className="p-4 bg-white">
-              <h3 className="text-gray-700 font-medium">Nombre</h3>
-              <p className="text-sm text-gray-500">Descripción</p>
+              <h3 className="text-gray-700 font-medium">Nombre Categoria</h3>
             </div>
           </div>
           <div className="rounded-lg overflow-hidden shadow-sm">
@@ -170,8 +166,7 @@ const Body = () => {
               />
             </div>
             <div className="p-4 bg-white">
-              <h3 className="text-gray-700 font-medium">Nombre</h3>
-              <p className="text-sm text-gray-500">Descripción</p>
+              <h3 className="text-gray-700 font-medium">Nombre Categoria</h3>
             </div>
           </div>
         </div>
