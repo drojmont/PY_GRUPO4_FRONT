@@ -30,35 +30,69 @@ const CreateProduct = () => {
   const navigate = useNavigate();
 
   /* Handle de los inputs */
+  // const handleInputsChange = (e) => {
+  //   const name = e.target.name;
+  //   const value = e.target.value;
+
+  //   const updatedInputs = {
+  //     ...inputs,
+  //     [name]: value,
+  //   };
+
+  //   setInputs(updatedInputs);
+
+  //   const newErrors = validationCreateProduct(updatedInputs);
+  //   if (name === 'name') {
+  //     const nameExists = events.some(
+  //       (event) => event.name.toLowerCase() === value.toLowerCase()
+  //     );
+
+  //     if (nameExists) {
+  //       newErrors.nameRepeat = 'El nombre ya está en uso';
+  //     } else {
+  //       delete newErrors.nameRepeat;
+  //     }
+  //   }
+
+  //   setError(newErrors);
+  // };
+
   const handleInputsChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-
+  
     const updatedInputs = {
       ...inputs,
       [name]: value,
     };
-
+  
     setInputs(updatedInputs);
-
-    const newErrors = validationCreateProduct(updatedInputs);
-    if (name === 'name') {
+  
+    // Primero, validamos los campos y actualizamos los errores
+    let newErrors = validationCreateProduct(updatedInputs);
+  
+    // Verificamos si el nombre ya existe
+    if (name === "name") {
       const nameExists = events.some(
         (event) => event.name.toLowerCase() === value.toLowerCase()
       );
-
+  
       if (nameExists) {
-        newErrors.nameRepeat = 'El nombre ya está en uso';
-      } else {
-        delete newErrors.nameRepeat;
+        newErrors.nameRepeat = "El nombre ya está en uso";
       }
     }
-
-    setError(newErrors);
-  };
-
   
- 
+    // Eliminamos errores corregidos
+    Object.keys(error).forEach((key) => {
+      if (!newErrors[key]) {
+        delete error[key];
+      }
+    });
+  
+    setError({ ...error, ...newErrors });
+  };
+  
+
   /* Envio del nuevo producto */
   const handleSubmitNewProduct = (e) => {
     e.preventDefault();
@@ -66,7 +100,16 @@ const CreateProduct = () => {
     const errors = validationCreateProduct(inputs);
 
     if (images.some((image) => image.isDefault)) {
-      errors.images = "Debes agregar 5 imágenes para tu evento";
+      errors.images = 'Debes agregar 5 imágenes para tu evento';
+    }
+
+    // Verificar si el nombre del evento ya existe antes de enviar
+    const nameExists = events.some(
+      (event) => event.name.toLowerCase() === inputs.name.toLowerCase()
+    );
+
+    if (nameExists) {
+      errors.nameRepeat = 'El nombre ya está en uso';
     }
 
     if (Object.keys(errors).length > 0) {
@@ -75,10 +118,9 @@ const CreateProduct = () => {
     }
 
     const imageUrls = images.map((image) => image.preview);
-    console.log(imageUrls)
 
     const newProduct = {
-      id: uuidv4().slice(0, 4),
+      id: uuidv4().slice(0, 3),
       name: inputs.name,
       description: inputs.description,
       images: imageUrls,
@@ -107,22 +149,19 @@ const CreateProduct = () => {
     }, 2000);
   };
 
-
   useEffect(() => {
     if (images.every((img) => !img.isDefault)) {
       setError((prev) => {
         const newError = { ...prev };
         delete newError.images;
-        return newError
+        return newError;
       });
     }
   }, [images]);
 
-
-
   return (
     <div className="w-full mx-auto flex flex-col items-center pt-3">
-       <ImageUploader
+      <ImageUploader
         images={images}
         setImages={setImages}
         error={error}
@@ -144,7 +183,7 @@ const CreateProduct = () => {
               name="name"
               onChange={handleInputsChange}
               value={inputs.name}
-              className="placeholder:text-jet placeholder:pl-2 border-2 rounded-lg py-2 px-4"
+              className="placeholder:text-gray-500 border-2 rounded-lg py-2 px-4"
             />
             {error.name && (
               <p className="text-red-400 flex items-center gap-2">
@@ -166,7 +205,7 @@ const CreateProduct = () => {
               name="description"
               onChange={handleInputsChange}
               value={inputs.description}
-              className="placeholder:text-jet placeholder:pl-2 border-2 rounded-lg pl-4 h-40 py-2"
+              className="placeholder:text-gray-500 placeholder:pl-1 border-2 rounded-lg pl-2 h-40 py-2"
             />
           </div>
           {error.description && (
