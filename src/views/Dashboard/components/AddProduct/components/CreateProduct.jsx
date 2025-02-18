@@ -103,7 +103,7 @@ const CreateProduct = () => {
     setError({});
 
     setTimeout(() => {
-      navigate('/administrador');
+      navigate('/administracion');
     }, 2000);
   };
 
