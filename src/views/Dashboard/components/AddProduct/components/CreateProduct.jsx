@@ -29,35 +29,7 @@ const CreateProduct = () => {
 
   const navigate = useNavigate();
 
-  /* Handle de los inputs */
-  // const handleInputsChange = (e) => {
-  //   const name = e.target.name;
-  //   const value = e.target.value;
-
-  //   const updatedInputs = {
-  //     ...inputs,
-  //     [name]: value,
-  //   };
-
-  //   setInputs(updatedInputs);
-
-  //   const newErrors = validationCreateProduct(updatedInputs);
-  //   if (name === 'name') {
-  //     const nameExists = events.some(
-  //       (event) => event.name.toLowerCase() === value.toLowerCase()
-  //     );
-
-  //     if (nameExists) {
-  //       newErrors.nameRepeat = 'El nombre ya está en uso';
-  //     } else {
-  //       delete newErrors.nameRepeat;
-  //     }
-  //   }
-
-  //   setError(newErrors);
-  // };
-
-  const handleInputsChange = (e) => {
+   const handleInputsChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
   
@@ -145,7 +117,7 @@ const CreateProduct = () => {
     setError({});
 
     setTimeout(() => {
-      navigate('/administracion');
+      navigate('/administracion/listar-productos');
     }, 2000);
   };
 
