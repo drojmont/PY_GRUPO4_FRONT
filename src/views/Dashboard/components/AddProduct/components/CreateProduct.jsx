@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { TbAlertCircle } from 'react-icons/tb';
 import { v4 as uuidv4 } from 'uuid';
 import ImageUploader from './ImageUploader';
+import { uploadImages } from '../../../../../utils/uploadToCloudinary';
 
 const CreateProduct = () => {
   const { events, addEvent } = useEvents();
@@ -29,44 +30,43 @@ const CreateProduct = () => {
 
   const navigate = useNavigate();
 
-   const handleInputsChange = (e) => {
+  const handleInputsChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-  
+
     const updatedInputs = {
       ...inputs,
       [name]: value,
     };
-  
+
     setInputs(updatedInputs);
-  
+
     // Primero, validamos los campos y actualizamos los errores
     let newErrors = validationCreateProduct(updatedInputs);
-  
+
     // Verificamos si el nombre ya existe
-    if (name === "name") {
+    if (name === 'name') {
       const nameExists = events.some(
         (event) => event.name.toLowerCase() === value.toLowerCase()
       );
-  
+
       if (nameExists) {
-        newErrors.nameRepeat = "El nombre ya está en uso";
+        newErrors.nameRepeat = 'El nombre ya está en uso';
       }
     }
-  
+
     // Eliminamos errores corregidos
     Object.keys(error).forEach((key) => {
       if (!newErrors[key]) {
         delete error[key];
       }
     });
-  
+
     setError({ ...error, ...newErrors });
   };
-  
 
-  /* Envio del nuevo producto */
-  const handleSubmitNewProduct = (e) => {
+
+  const handleSubmitNewProduct = async (e) => {
     e.preventDefault();
 
     const errors = validationCreateProduct(inputs);
@@ -75,7 +75,6 @@ const CreateProduct = () => {
       errors.images = 'Debes agregar 5 imágenes para tu evento';
     }
 
-    // Verificar si el nombre del evento ya existe antes de enviar
     const nameExists = events.some(
       (event) => event.name.toLowerCase() === inputs.name.toLowerCase()
     );
@@ -89,36 +88,41 @@ const CreateProduct = () => {
       return;
     }
 
-    const imageUrls = images.map((image) => image.preview);
+    try {
+      // Subir imágenes a Cloudinary
+      const imageUrls = await uploadImages(images);
 
-    const newProduct = {
-      id: uuidv4().slice(0, 3),
-      name: inputs.name,
-      description: inputs.description,
-      images: imageUrls,
-    };
+      if (imageUrls.length !== images.length) {
+        toast('Error subiendo algunas imágenes', { type: 'error' });
+        return;
+      }
 
-    console.log(newProduct);
-    addEvent(newProduct);
+      const newProduct = {
+        id: uuidv4().slice(0, 3),
+        name: inputs.name,
+        description: inputs.description,
+        images: imageUrls,
+      };
 
-    toast('Nuevo Evento exitosamente creado!', {
-      position: 'top-right',
-      type: 'info',
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light',
-    });
+      console.log(newProduct);
+      addEvent(newProduct);
 
-    setInputs({ name: '', description: '' });
-    setError({});
+      toast('Nuevo Evento creado con éxito!', {
+        position: 'top-right',
+        type: 'success',
+        autoClose: 1500,
+      });
 
-    setTimeout(() => {
-      navigate('/administracion/listar-productos');
-    }, 2000);
+      setInputs({ name: '', description: '' });
+      setError({});
+
+      setTimeout(() => {
+        navigate('/administracion/listar-productos');
+      }, 2000);
+    } catch (error) {
+      console.error('Error creando el evento:', error);
+      toast('Hubo un problema, intenta de nuevo', { type: 'error' });
+    }
   };
 
   useEffect(() => {
@@ -195,7 +199,6 @@ const CreateProduct = () => {
           </Button>
         </form>
       </Card>
-
       <ToastContainer />
     </div>
   );
