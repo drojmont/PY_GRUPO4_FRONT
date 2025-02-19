@@ -85,7 +85,7 @@ export default function ImageUploader({ images, setImages, error }) {
         {isDragActive ? (
           <p>Suelta las imágenes aquí...</p>
         ) : (
-          <p>Arrastra y suelta imágenes aquí, o haz clic para seleccionar</p>
+          <p>Haz click para seleccionar imágenes, arrastralas y suelta las imágenes aquí</p>
         )}
       </div>
 
