@@ -177,8 +177,10 @@ const Body = () => {
           Recomendaciones
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2  gap-6">
-          <RecomendadosHome />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+          <div className="col-span-1 sm:col-span-2">
+            <RecomendadosHome />
+          </div>
         </div>
       </section>
     </div>
