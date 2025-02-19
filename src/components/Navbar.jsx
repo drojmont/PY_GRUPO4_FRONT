@@ -22,7 +22,7 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center space-x-4">
-            <button className="px-4 py-2 text-white hover:text-gray-200 transition-colors duration-200">Iniciar Sesón</button>
+            <button className="px-4 py-2 text-white hover:text-gray-200 transition-colors duration-200">Iniciar Sesión</button>
             <button className="px-6 py-2 bg-[#45B5C4] text-white rounded-lg hover:bg-[#3da3b1] transition-colors duration-200">Regístrate</button> 
         </div>
         </nav>
