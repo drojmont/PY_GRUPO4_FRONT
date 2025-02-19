@@ -1,15 +1,15 @@
-import { Button, Card, Typography } from '@material-tailwind/react';
-import DefaultImage from '@assets/image-default.svg';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
-import useEvents from '../../../../../Hooks/useEvents';
-import validationCreateProduct from '../../../../../utils/validationCreateProduct';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { TbAlertCircle } from 'react-icons/tb';
-import { v4 as uuidv4 } from 'uuid';
-import ImageUploader from './ImageUploader';
-import { uploadImages } from '../../../../../utils/uploadToCloudinary';
+import { Button, Card, Typography } from "@material-tailwind/react";
+import DefaultImage from "@assets/image-default.svg";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import useEvents from "../../../../../Hooks/useEvents";
+import validationCreateProduct from "../../../../../utils/validationCreateProduct";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { TbAlertCircle } from "react-icons/tb";
+import { v4 as uuidv4 } from "uuid";
+import ImageUploader from "./ImageUploader";
+import { uploadImages } from "../../../../../utils/uploadToCloudinary";
 
 const CreateProduct = () => {
   const { events, addEvent } = useEvents();
@@ -23,8 +23,8 @@ const CreateProduct = () => {
   );
 
   const [inputs, setInputs] = useState({
-    name: '',
-    description: '',
+    name: "",
+    description: "",
   });
   const [error, setError] = useState({});
 
@@ -45,13 +45,13 @@ const CreateProduct = () => {
     let newErrors = validationCreateProduct(updatedInputs);
 
     // Verificamos si el nombre ya existe
-    if (name === 'name') {
+    if (name === "name") {
       const nameExists = events.some(
         (event) => event.name.toLowerCase() === value.toLowerCase()
       );
 
       if (nameExists) {
-        newErrors.nameRepeat = 'El nombre ya está en uso';
+        newErrors.nameRepeat = "El nombre ya está en uso";
       }
     }
 
@@ -65,14 +65,14 @@ const CreateProduct = () => {
     setError({ ...error, ...newErrors });
   };
 
-
   const handleSubmitNewProduct = async (e) => {
     e.preventDefault();
 
     const errors = validationCreateProduct(inputs);
 
     if (images.some((image) => image.isDefault)) {
-      errors.images = 'Debes agregar 5 imágenes para tu evento';
+      //errors.images = "Debes agregar 5 imágenes para tu evento";
+      errors.images = "Debes agregar por lo menos 5 imágenes para tu evento";
     }
 
     const nameExists = events.some(
@@ -80,7 +80,7 @@ const CreateProduct = () => {
     );
 
     if (nameExists) {
-      errors.nameRepeat = 'El nombre ya está en uso';
+      errors.nameRepeat = "El nombre ya está en uso";
     }
 
     if (Object.keys(errors).length > 0) {
@@ -93,7 +93,7 @@ const CreateProduct = () => {
       const imageUrls = await uploadImages(images);
 
       if (imageUrls.length !== images.length) {
-        toast('Error subiendo algunas imágenes', { type: 'error' });
+        toast("Error subiendo algunas imágenes", { type: "error" });
         return;
       }
 
@@ -107,21 +107,21 @@ const CreateProduct = () => {
       console.log(newProduct);
       addEvent(newProduct);
 
-      toast('Nuevo Evento creado con éxito!', {
-        position: 'top-right',
-        type: 'success',
+      toast("Nuevo Evento creado con éxito!", {
+        position: "top-right",
+        type: "success",
         autoClose: 1500,
       });
 
-      setInputs({ name: '', description: '' });
+      setInputs({ name: "", description: "" });
       setError({});
 
       setTimeout(() => {
-        navigate('/administracion/listar-productos');
+        navigate("/administracion/listar-productos");
       }, 2000);
     } catch (error) {
-      console.error('Error creando el evento:', error);
-      toast('Hubo un problema, intenta de nuevo', { type: 'error' });
+      console.error("Error creando el evento:", error);
+      toast("Hubo un problema, intenta de nuevo", { type: "error" });
     }
   };
 
