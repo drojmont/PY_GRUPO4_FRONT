@@ -5,7 +5,7 @@ import useEvents from "../../../Hooks/useEvents";
 const RecomendadosHome = () => {
   const { events } = useEvents();
   const [startIndex, setStartIndex] = useState(0);
-  const itemsPerPage = 4; 
+  const itemsPerPage = 10; 
 
   useEffect(() => {
     if (events.length > 0) {
