@@ -17,7 +17,7 @@ const RecomendadosCard = ({ event }) => {
             <div className="flex justify-between items-start mb-2">
               <h3 className="text-gray-700 font-medium">{event.name}</h3>
             </div>
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-gray-600 line-clamp-4">
               <span>{event.description}</span>
             </div>
           </div>

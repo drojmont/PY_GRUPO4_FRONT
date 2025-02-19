@@ -1,10 +1,10 @@
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import DefaultImage from "@assets/image-default.svg"
+import DefaultImage from "@assets/image-default.svg";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { TbAlertCircle } from "react-icons/tb";
 
-const MAX_IMAGES = 5;
+const MAX_IMAGES = 15; //Limita la cantidad de imagenes a subir
 
 export default function ImageUploader({ images, setImages, error }) {
   const onDrop = useCallback(
@@ -17,18 +17,25 @@ export default function ImageUploader({ images, setImages, error }) {
         .filter((i) => i !== null);
 
       acceptedFiles.forEach((file, i) => {
-        if (i < emptySlots.length) {
-          // Reemplaza slots default con nuevas imágenes
-          const reader = new FileReader();
-          reader.onload = () => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          if (i < emptySlots.length) {
+            // Reemplaza slots default con nuevas imágenes
             updatedImages[emptySlots[i]] = {
               preview: reader.result,
               isDefault: false,
             };
             setImages(updatedImages);
-          };
-          reader.readAsDataURL(file)
-        }
+          } else {
+            // Agrega más imagenes si se subieron más de 5
+            updatedImages.push({
+              preview: reader.result,
+              isDefault: false,
+            });
+          }
+          setImages(updatedImages);
+        };
+        reader.readAsDataURL(file);
       });
     },
     [images, setImages]
@@ -65,32 +72,19 @@ export default function ImageUploader({ images, setImages, error }) {
     MAX_IMAGES - images.filter((img) => !img.isDefault).length;
   const message =
     remainingSlots === 1 ? "imagen restante" : "imágenes restantes";
-  
+
   return (
     <div className="w-full max-w-[600px] p-4 border rounded-lg shadow-md bg-white">
       <div className="flex justify-between items-center">
-        <h2 className="font-bold text-lg mb-2">Agregar Imagen</h2>
+        <h2 className="font-bold text-lg mb-2">Agregar Imagenes</h2>
         <p className="text-sm text-gray-500 mb-2">
           Tienes {remainingSlots} {message} para agregar
         </p>
       </div>
 
-      <div
-        {...getRootProps()}
-        className={`border-2 border-dashed border-gray-400 p-6 text-center cursor-pointer mb-4 ${
-          remainingSlots === 0 ? "opacity-50 cursor-not-allowed" : ""
-        }`}
-      >
-        <input {...getInputProps()} />
-        {isDragActive ? (
-          <p>Suelta las imágenes aquí...</p>
-        ) : (
-          <p>Arrastra y suelta imágenes aquí, o haz clic para seleccionar</p>
-        )}
-      </div>
-
       <div className="grid grid-cols-3 gap-2 place-items-center">
-        {images.map((image, index) => (
+        {images?.slice(0, 5).map((image, index) => (
+          //images.map((image, index) => (
           <div
             key={index}
             className={`border rounded-lg relative group w-[120px] lg:w-[135px] h-[110px] overflow-hidden hover:border-gray-400 hover:border-dashed hover:border-2 hover:scale-105 ${
@@ -119,6 +113,23 @@ export default function ImageUploader({ images, setImages, error }) {
           </div>
         ))}
       </div>
+      <div
+        {...getRootProps()}
+        className={`border-2 border-dashed border-gray-400 p-6 b- text-center cursor-pointer m-4 ${
+          remainingSlots === 0 ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+      >
+        <input {...getInputProps()} />
+        {isDragActive ? (
+          <p>Suelta las imágenes aquí...</p>
+        ) : (
+          //<p>Arrastra y suelta imágenes aquí, o haz clic para seleccionar</p>
+          <p>
+            Para más imagenes, arrastra y suelta el archivo aquí o haz clic aquí
+          </p>
+        )}
+      </div>
+
       {error.images && (
         <p className="text-red-400 text-sm pt-1 flex items-center gap-2">
           <TbAlertCircle color="red" />
