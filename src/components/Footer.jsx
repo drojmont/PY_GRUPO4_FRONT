@@ -13,7 +13,7 @@ const Footer = () => {
             </div>
 
             <div className="text-sm">
-            <p className="font-medium">© 2025 MagicTour Todos los derechos reservados</p>
+            <p className="font-medium">© 2025 Go Trip Todos los derechos reservados</p>
             </div>
         </div>
         </div>

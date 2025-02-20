@@ -15,8 +15,8 @@ const Navbar = () => {
             </div>
             
             <div className="hidden sm:block ml-3">
-                <h1 className="text-lg font-bold text-white">GO TRYP</h1>
-                <p className="text-sm text-gray-100">Tu aventura comienza aquí</p>
+                <h1 className="text-lg font-bold text-white">GO TRIP</h1>
+                <p className="text-sm text-gray-100">¡Tu aventura comienza aquí!</p>
             </div>
             </Link>
         </div>
