@@ -47,19 +47,7 @@ const Body = () => {
                 </button>
 
                 {isOpen && (
-                  <div className="absolute z-20 mt-2 w-full md:w-48 bg-white rounded-lg shadow-lg py-2">
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                    >
-                      Festivales
-                    </a>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                    >
-                      Convenciones
-                    </a>
+                  <div className="absolute z-20 w-full md:w-48 bg-white rounded-lg shadow-lg py-2">
                     <a
                       href="#"
                       className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
@@ -70,7 +58,26 @@ const Body = () => {
                       href="#"
                       className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                     >
-                      Viajes Familiares
+                      Festivales
+                    </a>
+                    <a
+                      href="#"
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    >
+                      Congresos
+                    </a>
+                    <a
+                      href="#"
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    >
+                      Conferencias
+                    </a>
+
+                    <a
+                      href="#"
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    >
+                      Eventos
                     </a>
                   </div>
                 )}
@@ -105,80 +112,80 @@ const Body = () => {
         </div>
       </section>
 
-      <section className="mb-12">
+      <section className="mb-12 mx-10 mt-7">
         <h2 className="text-lg font-medium text-gray-700 mb-4">Categorías</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 md:flex-nowrap gap-4">
           <div className="rounded-lg overflow-hidden shadow-sm">
             <div className="bg-gray-200 h-48 w-full">
               <img
-                src={fotoImage}
+                src="https://www.vanguardia.com/resizer/v2/V6Q2DYOGH5ERZH5QUKBSDOYWP4.jpg?auth=ef408fd7956135b3951b879be803db567384799b28a98127667b001f3eb101f6&smart=true&width=1200&height=800&quality=70"
                 alt=" imagen del producto"
                 className="w-full h-full "
               />
             </div>
             <div className="p-4 bg-white">
-              <h3 className="text-gray-700 font-medium">Nombre Categoria</h3>
+              <h3 className="text-gray-700 font-medium">Conciertos</h3>
             </div>
           </div>
 
           <div className="rounded-lg overflow-hidden shadow-sm">
             <div className="bg-gray-200 h-48 w-full">
               <img
-                src={fotoImage}
+                src="https://static.wixstatic.com/media/b84f80_d022b845504e4c3585e6edd20e02a892~mv2.png/v1/fill/w_1013,h_603,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/b84f80_d022b845504e4c3585e6edd20e02a892~mv2.png"
                 alt=" imagen del producto"
                 className="w-full h-full "
               />
             </div>
             <div className="p-4 bg-white">
-              <h3 className="text-gray-700 font-medium">Nombre Categoria</h3>
+              <h3 className="text-gray-700 font-medium">Festivales</h3>
             </div>
           </div>
           <div className="rounded-lg overflow-hidden shadow-sm">
             <div className="bg-gray-200 h-48 w-full">
               <img
-                src={fotoImage}
+                src="https://i0.wp.com/itseller.co/wp-content/uploads/2025/01/CES2025-ITSELLER.jpg?w=1000&ssl=1"
                 alt=" imagen del producto"
                 className="w-full h-full "
               />
             </div>
             <div className="p-4 bg-white">
-              <h3 className="text-gray-700 font-medium">Nombre Categoria</h3>
+              <h3 className="text-gray-700 font-medium">Congresos</h3>
             </div>
           </div>
           <div className="rounded-lg overflow-hidden shadow-sm">
             <div className="bg-gray-200 h-48 w-full">
               <img
-                src={fotoImage}
+                src="https://gijn.org/wp-content/uploads/2025/01/IDEAS-771x433.png"
                 alt=" imagen del producto"
                 className="w-full h-full "
               />
             </div>
             <div className="p-4 bg-white">
-              <h3 className="text-gray-700 font-medium">Nombre Categoria</h3>
+              <h3 className="text-gray-700 font-medium">Conferencias</h3>
             </div>
           </div>
           <div className="rounded-lg overflow-hidden shadow-sm">
             <div className="bg-gray-200 h-48 w-full">
               <img
-                src={fotoImage}
+                src="https://www.uniminutoradio.com.co/wp-content/uploads/2024/09/Mundial-de-Clubes-2025.jpg"
                 alt=" imagen del producto"
                 className="w-full h-full "
               />
             </div>
             <div className="p-4 bg-white">
-              <h3 className="text-gray-700 font-medium">Nombre Categoria</h3>
+              <h3 className="text-gray-700 font-medium">Eventos</h3>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="py-12 px-4">
+      <section className="py-12 mx-10">
         <h2 className="text-lg font-medium text-gray-700 mb-4">
           Recomendaciones
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
-          <div className="col-span-1 sm:col-span-2">
+          <div className="col-span-1 sm:col-span-2 ">
             <RecomendadosHome />
           </div>
         </div>
