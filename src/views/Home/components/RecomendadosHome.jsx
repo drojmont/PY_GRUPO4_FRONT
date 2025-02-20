@@ -5,17 +5,20 @@ import useEvents from "../../../Hooks/useEvents";
 const RecomendadosHome = () => {
   const { events } = useEvents();
   const [startIndex, setStartIndex] = useState(0);
+  const [eventsToDisplay, setEventsToDisplay] = useState([]);
   const itemsPerPage = 10; 
-
+  
   useEffect(() => {
     if (events.length > 0) {
+      const shuffled = [...events].sort(() => Math.random() - 0.5);
+      setEventsToDisplay(shuffled);
       setStartIndex(0); 
     }
   }, [events]);
 
-  const totalPages = Math.ceil(events.length / itemsPerPage);
+  const totalPages = Math.ceil(eventsToDisplay.length / itemsPerPage);
   const currentPage = Math.floor(startIndex / itemsPerPage) + 1;
-  const visibleEvents = events.slice(startIndex, startIndex + itemsPerPage);
+  const visibleEvents = eventsToDisplay.slice(startIndex, startIndex + itemsPerPage);
 
   const goToPage = (page) => {
     setStartIndex((page - 1) * itemsPerPage);
