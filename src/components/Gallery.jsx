@@ -3,7 +3,7 @@ import { useState } from 'react';
 const Gallery = ({ images }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
+  
   if (!images || images.length === 0) {
     return null;
   }
@@ -11,10 +11,18 @@ const Gallery = ({ images }) => {
   const mainImage = images[0];
   const gridImages = images.slice(1, 5);
 
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
+
   return (
     <div className="w-full">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Imagen principal - mitad izquierda */}
+        
         <div className="relative h-[300px] md:h-[500px] overflow-hidden">
           <img
             src={mainImage}
@@ -23,7 +31,7 @@ const Gallery = ({ images }) => {
           />
         </div>
 
-        {/* Grid 2x2 - mitad derecha */}
+        
         <div className="hidden md:grid grid-cols-2 grid-rows-2 gap-4">
           {gridImages.map((image, index) => (
             <div key={index} className="relative h-[240px] overflow-hidden">
@@ -44,12 +52,12 @@ const Gallery = ({ images }) => {
           ))}
         </div>
 
-        {/* Versión mobile - Carrusel horizontal */}
-        <div className="md:hidden flex gap-4 overflow-x-auto snap-x pb-4">
+        
+        <div className="md:hidden grid grid-cols-2 gap-2 mt-2">
           {gridImages.map((image, index) => (
             <div
               key={index}
-              className="flex-none w-[280px] h-[200px] relative snap-start overflow-hidden"
+              className="relative h-[150px] overflow-hidden"
             >
               <img
                 src={image}
@@ -59,7 +67,7 @@ const Gallery = ({ images }) => {
               {index === gridImages.length - 1 && (
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="absolute bottom-4 right-4 bg-white/90 hover:bg-white px-4 py-2 rounded-lg shadow-lg text-gray-800 font-medium transition-colors"
+                  className="absolute bottom-2 right-2 bg-white/90 hover:bg-white px-2 py-1 text-sm rounded-lg shadow-lg text-gray-800 font-medium transition-colors"
                 >
                   Ver más
                 </button>
@@ -73,7 +81,7 @@ const Gallery = ({ images }) => {
         <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center">
           <div className="w-full max-w-6xl p-4 flex flex-col h-screen">
             <div className="relative flex-1 min-h-0 flex flex-col">
-              {/* Botón de cerrar */}
+
               <div className="absolute top-0 right-0 p-4 z-10">
                 <button
                   onClick={() => setIsModalOpen(false)}
@@ -95,16 +103,57 @@ const Gallery = ({ images }) => {
                 </button>
               </div>
 
-              {/* Contenedor de imagen principal */}
-              <div className="flex-1 flex items-center justify-center mb-4">
+              
+              <div className="flex-1 flex items-center justify-center mb-4 relative">
+                
+                <button 
+                  onClick={handlePrevImage}
+                  className="absolute left-4 bg-white/20 hover:bg-white/40 w-10 h-10 rounded-full flex items-center justify-center z-10 transition-colors"
+                >
+                  <svg 
+                    className="w-6 h-6 text-white" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M15 19l-7-7 7-7" 
+                    />
+                  </svg>
+                </button>
+                
+                
                 <img
                   src={images[currentImageIndex]}
                   alt={`Vista ${currentImageIndex + 1}`}
                   className="max-h-[calc(100vh-160px)] w-auto object-contain rounded-lg"
                 />
+                
+                
+                <button 
+                  onClick={handleNextImage}
+                  className="absolute right-4 bg-white/20 hover:bg-white/40 w-10 h-10 rounded-full flex items-center justify-center z-10 transition-colors"
+                >
+                  <svg 
+                    className="w-6 h-6 text-white" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M9 5l7 7-7 7" 
+                    />
+                  </svg>
+                </button>
               </div>
 
-              {/* Carrusel de miniaturas */}
+              
               <div className="h-24 mt-auto">
                 <div className="flex gap-2 overflow-x-auto snap-x py-2">
                   {images.map((image, index) => (
