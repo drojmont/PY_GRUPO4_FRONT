@@ -7,12 +7,13 @@ import {
   IconButton,
   Tooltip,
 } from '@material-tailwind/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useEvents from '../../../../../Hooks/useEvents';
 import { MdOutlineEdit } from 'react-icons/md';
 import { LuTrash2 } from 'react-icons/lu';
 import PaginationTable from './PaginationTable';
 import DeleteModal from './DeleteModal';
+import { useNavigate } from 'react-router';
 
 const TABLE_HEAD = ['Id', 'Nombre', 'Acciones'];
 
@@ -65,27 +66,44 @@ const TABLE_ROWS = [
 ];
 
 const ProductsTable = () => {
-  const { events, isLoading, setIsLoading } = useEvents();
+  const { events, isLoading } = useEvents();
   const [eventId, setEventId] = useState(null);
-
-  /* Simular una carga de informacion */
-  setTimeout(() => {
-    setIsLoading(false);
-  }, 2000);
 
   //Paginación
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const totalPages = Math.ceil(events?.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentEventsPerPage = events?.slice(indexOfFirstItem, indexOfLastItem);
+  // const indexOfLastItem = currentPage * itemsPerPage;
+  // const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  // const currentEventsPerPage = events?.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Estado para los eventos paginados
+  const [currentEventsPerPage, setCurrentEventsPerPage] = useState([]);
+ 
+
+  // useEffect(() => {
+  //   console.log("Eventos actualizados:", events);
+  // }, [events]);
+
+  // Actualiza la lista paginada cuando cambien los eventos o la página actual
+  useEffect(() => {
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const updateEvents =events?.slice(indexOfFirstItem, indexOfLastItem)
+    setCurrentEventsPerPage(updateEvents);
+  }, [events, currentPage, itemsPerPage]);
 
   const [openModal, setOpenModal] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleGetIdDeleteIcon = (id) => {
     setEventId(id);
     setOpenModal(true);
+  };
+
+  const handleUpdateProduct = (id) => {
+    navigate(`/administracion/editar-producto/${id}`);
   };
 
   return (
@@ -157,7 +175,10 @@ const ProductsTable = () => {
                         content="Editar"
                         className="bg-anti-flash-white text-jet"
                       >
-                        <IconButton variant="text">
+                        <IconButton
+                          variant="text"
+                          onClick={() => handleUpdateProduct(id)}
+                        >
                           <MdOutlineEdit size={18} />
                         </IconButton>
                       </Tooltip>
