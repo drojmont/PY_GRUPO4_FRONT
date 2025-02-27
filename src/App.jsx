@@ -6,6 +6,7 @@ import Dashboard from "./views/Dashboard/Dashboard";
 import AddProducts from "./views/Dashboard/components/AddProduct/AddProducts";
 import CreateProduct from "./views/Dashboard/components/AddProduct/components/CreateProduct";
 import ListProducts from "./views/Dashboard/components/ListProducts/ListProducts";
+import EditProduct from "./views/Dashboard/components/AddProduct/components/EditProduct";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route index element={<AddProducts />} />
           <Route path="crear-producto" element={<CreateProduct />} />
           <Route path="listar-productos" element={<ListProducts />} />
+          <Route path="editar-producto/:id" element={<EditProduct/>}/>
         </Route>
       </Route>
     </Routes>
