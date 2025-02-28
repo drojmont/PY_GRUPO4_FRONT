@@ -6,7 +6,7 @@ import Dashboard from "./views/Dashboard/Dashboard";
 import AddProducts from "./views/Dashboard/components/AddProduct/AddProducts";
 import CreateProduct from "./views/Dashboard/components/AddProduct/components/CreateProduct";
 import ListProducts from "./views/Dashboard/components/ListProducts/ListProducts";
-
+import Register from "./views/Register";
 function App() {
   return (
     <Routes>
@@ -14,6 +14,7 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="/Detail/:id" element={<Detail />} />
+        <Route path="/register" element={<Register />} />
         {/* Panel Administrador */}
         <Route path="/administracion" element={<Dashboard />}>
           <Route index element={<AddProducts />} />
