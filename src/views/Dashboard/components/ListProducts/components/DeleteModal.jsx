@@ -6,13 +6,11 @@ import {
 } from '@material-tailwind/react';
 import useEvents from '../../../../../Hooks/useEvents';
 
-
 const DeleteModal = ({ open, onClose, eventId, setOpenModal }) => {
+  const { deleteEvent, isLoading } = useEvents();
 
-  const { deleteEvents } = useEvents();
-
-  const handleDeleteEvent = () => {
-    deleteEvents(eventId)
+  const handleDeleteEvent = async () => {
+    await deleteEvent(eventId);
     setOpenModal(false);
   };
 
