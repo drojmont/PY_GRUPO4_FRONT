@@ -1,8 +1,8 @@
 import { Button, Card, Typography } from '@material-tailwind/react';
 import DefaultImage from '@assets/image-default.svg';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 // import { useNavigate } from 'react-router';
-import useEvents from '../../../../Hooks/useEvents';
+// import useEvents from '../../../../Hooks/useEvents';
 import validationCreateProduct from '../../../../utils/validationCreateProduct';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,10 +10,11 @@ import { TbAlertCircle } from 'react-icons/tb';
 import ImageUploader from '../../components/AddProduct/components/ImageUploader';
 import { uploadImages } from '../../../../utils/uploadToCloudinary';
 import { SelectCategory } from './components/SelectCategory';
+import { EventContext } from '../../../../context/ProductContext';
 
 const ProductForm = ({ onSubmit, initialData = {} }) => {
   
-  const { events } = useEvents();
+  const { events } = useContext(EventContext);
 
   const [images, setImages] = useState(
     Array(5)
@@ -25,7 +26,7 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
   );
 
   const [selectedCategory, setSelectedCategory] = useState(0);
-  console.log("dentro del formulario", selectedCategory)
+  
 
   const [inputs, setInputs] = useState({
     name: '',

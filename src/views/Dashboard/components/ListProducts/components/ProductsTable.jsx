@@ -8,14 +8,16 @@ import {
   Tooltip,
   Chip,
 } from '@material-tailwind/react';
-import { useEffect, useState } from 'react';
-import useEvents from '../../../../../Hooks/useEvents';
+import { useContext, useEffect, useState } from 'react';
+// import useEvents from '../../../../../Hooks/useEvents';
 import { MdOutlineEdit } from 'react-icons/md';
 import { LuTrash2 } from 'react-icons/lu';
 import PaginationTable from './PaginationTable';
 import DeleteModal from './DeleteModal';
 import { useNavigate } from 'react-router';
 import EditCategory from './EditCategory';
+import { EventContext } from '../../../../../context/ProductContext';
+import { getProducts } from '../../../../../services/productService';
 
 const TABLE_HEAD = ['Id', 'Nombre', 'Categoría', 'Acciones'];
 
@@ -68,31 +70,45 @@ const TABLE_ROWS = [
 ];
 
 const ProductsTable = () => {
-  const { events, isLoading } = useEvents();
+  // const { events, isLoading } = useContext(EventContext);
 
+  const [events, setEvents] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [eventId, setEventId] = useState(null);
   // const [categoryId, setCategoryId] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const totalPages = Math.ceil(events?.length / itemsPerPage);
+
   // const indexOfLastItem = currentPage * itemsPerPage;
   // const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   // const currentEventsPerPage = events?.slice(indexOfFirstItem, indexOfLastItem);
 
   // Estado para los eventos paginados
   const [currentEventsPerPage, setCurrentEventsPerPage] = useState([]);
-  // console.log("Estado de los eventos en la tabla ", currentEventsPerPage)
+ 
 
   useEffect(() => {
-    console.log('UseEffect Eventos actualizados:', events);
-  }, [events]);
+    const api = async () => {
+      try {
+        const response = await getProducts();
+        setEvents([...response]);
+      } catch (error) {
+        console.error('Error fetching dentists:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    api();
+  }, []);
 
   // Actualiza la lista paginada cuando cambien los eventos o la página actual
   useEffect(() => {
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const updateEvents = events?.slice(indexOfFirstItem, indexOfLastItem);
+    const sortedEvents = events.sort((a, b) => a.id - b.id);
+    const updateEvents = sortedEvents?.slice(indexOfFirstItem, indexOfLastItem);
     setCurrentEventsPerPage(updateEvents);
   }, [events, currentPage, itemsPerPage]);
 
@@ -111,15 +127,16 @@ const ProductsTable = () => {
   };
 
   const handleUpdateCategory = (id) => {
-    console.log("hadle que obtine categoria para el padre table", id)
+    console.log('hadle que obtine categoria para el padre table', id);
     setEventId(id);
     setOpenModalCategory(true);
   };
 
-  // max-h-[540px]
+  
+        
   return (
     <Card className="h-full w-full mx-auto max-w-[900px] border mb-5">
-      <CardBody className=" overflow-hidden  overflow-x-auto p-0 ">
+      <CardBody className="max-h-[540px] overflow-hidden  overflow-x-auto p-0 ">
         <table className=" w-full min-w-max table-auto text-left">
           <thead>
             <tr>
@@ -149,7 +166,7 @@ const ProductsTable = () => {
                 </td>
               </tr>
             ) : (
-              events.map(({ id, name, images, categoryOutputDTO }, index) => {
+              currentEventsPerPage?.map(({ id, name, images, categoryOutputDTO }, index) => {
                 const isLast = index === TABLE_ROWS.length - 1;
                 const classes = isLast ? 'p-4' : 'p-4 ';
 
@@ -251,13 +268,15 @@ const ProductsTable = () => {
         onClose={() => setOpenModalCategory(false)}
         eventId={eventId}
         setOpenModal={setOpenModalCategory}
+        setEvents={setEvents}
       />
       {/* Componente del modal para eliminar un producto */}
       <DeleteModal
         open={openModal}
         onClose={() => setOpenModal(false)}
-        eventId={eventId}
         setOpenModal={setOpenModal}
+        eventId={eventId}
+        setEvents={setEvents}
       />
     </Card>
   );

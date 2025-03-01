@@ -1,13 +1,14 @@
 import { useParams, useNavigate } from 'react-router';
 import ProductForm from '../ProductForm';
-import useEvents from '../../../../../Hooks/useEvents';
-import { useEffect, useState } from 'react';
+// import useEvents from '../../../../../Hooks/useEvents';
+import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { getProductById } from '../../../../../services/productService';
+import { EventContext } from '../../../../../context/ProductContext';
 
 const EditProduct = () => {
   const { id } = useParams();
-  const { updateEvent } = useEvents();
+  const { updateEvent } = useContext(EventContext);
   const navigate = useNavigate();
   const [product, setProduct] = useState({});
   const [isLoading, setIsLoading] = useState(true);

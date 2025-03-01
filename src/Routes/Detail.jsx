@@ -1,12 +1,13 @@
 import { useParams, useNavigate } from "react-router-dom";
-import useEvents from "../Hooks/useEvents";
-import { useEffect, useState } from "react";
+// import useEvents from "../Hooks/useEvents";
+import { useContext, useEffect, useState } from "react";
 import Gallery from "../components/Gallery";
+import { EventContext } from "../context/ProductContext";
 
 const Detail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { events } = useEvents();
+  const { events } = useContext(EventContext);
   const [currentEvent, setCurrentEvent] = useState(null);
 
   useEffect(() => {

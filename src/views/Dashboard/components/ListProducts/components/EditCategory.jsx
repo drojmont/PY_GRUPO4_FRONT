@@ -1,37 +1,27 @@
-import { useEffect } from 'react';
 import { SelectCategory } from '../../AddProduct/components/SelectCategory';
 import { Dialog, DialogBody, DialogFooter } from '@material-tailwind/react';
-import { getProductById, updateProduct } from '../../../../../services/productService';
-import { getCategoryById } from '../../../../../services/categoryService';
+import {
+  getProductById,
+  getProducts,
+  updateProduct,
+} from '../../../../../services/productService';
 
-const EditCategory = ({ open, onClose, eventId, setOpenModal }) => {
-console.log("id del evento", eventId)
-  // useEffect(()=>{
-  //  const fetchEvent =async()=>{
-    
-  //  }
-  //  fetchEvent()
-  // },[])
-
+const EditCategory = ({ open, onClose, eventId, setEvents, setOpenModal }) => {
   const handleGetCategoryId = async (categoryId) => {
-    console.log("id de la categoria",categoryId);
     try {
-      const dataEvent= await getProductById(eventId);
-      console.log("evento obtenido", dataEvent)
-      // const dataCategory= await getCategoryById(categoryId);
-      // console.log("categoria obtenida", dataCategory)
+      const dataEvent = await getProductById(eventId);
       const { categoryOutputDTO, ...eventWithoutCategory } = dataEvent;
       const changeCategoryEvent = {
         ...eventWithoutCategory,
-        categoryId, 
+        categoryId,
       };
-      console.log("🔍 Objeto enviado al backend:", changeCategoryEvent);
-      const updateEvent = await updateProduct(eventId, changeCategoryEvent);
-      console.log("evento actulizado en la lista", updateEvent)
-     } catch (error) {
-      console.log("Ha ocurrido un error", error)
-     }
-    // setOpenModal(false);
+      await updateProduct(eventId, changeCategoryEvent);
+      const updateEvents = await getProducts();
+      setEvents([...updateEvents]);
+      setOpenModal(false);
+    } catch (error) {
+      console.log('Ha ocurrido un error', error);
+    }
   };
 
   return (
