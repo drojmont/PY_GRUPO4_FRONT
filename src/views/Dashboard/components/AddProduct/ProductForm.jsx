@@ -12,7 +12,7 @@ import { uploadImages } from '../../../../utils/uploadToCloudinary';
 import { SelectCategory } from './components/SelectCategory';
 
 const ProductForm = ({ onSubmit, initialData = {} }) => {
-  // console.log('informacion inicial', initialData);
+  
   const { events } = useEvents();
 
   const [images, setImages] = useState(
@@ -24,17 +24,47 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
       }))
   );
 
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(0);
+  console.log("dentro del formulario", selectedCategory)
 
   const [inputs, setInputs] = useState({
     name: '',
     price: '',
     description: '',
-    categoryId: 0,
   });
   const [error, setError] = useState({});
 
   const currentIdEvent = initialData.id;
+
+  useEffect(() => {
+    if (images.every((img) => !img.isDefault)) {
+      setError((prev) => {
+        const newError = { ...prev };
+        delete newError.images;
+        return newError;
+      });
+    }
+  }, [images]);
+
+  useEffect(() => {
+    if (initialData && Object.keys(initialData).length > 0) {
+      setInputs({
+        name: initialData.name || '',
+        price: initialData.price || '',
+        description: initialData.description || '',
+        categoryOutputDTO: initialData.category || '',
+      });
+
+      setImages(
+        initialData.images?.map((url) => ({
+          preview: url,
+          isDefault: false,
+        })) || []
+      );
+
+      setSelectedCategory(initialData.category || '');
+    }
+  }, [initialData]);
 
   const handleInputsChange = (e) => {
     const name = e.target.name;
@@ -71,8 +101,8 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
     setError({ ...error, ...newErrors });
   };
 
-  const handleGetCategory = (category) => {
-    setSelectedCategory(category);
+  const handleGetCategory = (id) => {
+    setSelectedCategory(id);
   };
 
   const handleSubmitNewProduct = async (e) => {
@@ -130,7 +160,7 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
         categoryId: selectedCategory,
       };
 
-      // console.log(newProduct);
+       console.log(newProduct);
       // const submitError = await addEvent(newProduct);
 
       // if (submitError) {
@@ -163,35 +193,7 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
     }
   };
 
-  useEffect(() => {
-    if (images.every((img) => !img.isDefault)) {
-      setError((prev) => {
-        const newError = { ...prev };
-        delete newError.images;
-        return newError;
-      });
-    }
-  }, [images]);
-
-  useEffect(() => {
-    if (initialData && Object.keys(initialData).length > 0) {
-      setInputs({
-        name: initialData.name || '',
-        price: initialData.price || '',
-        description: initialData.description || '',
-        category: initialData.category || '',
-      });
-
-      setImages(
-        initialData.images?.map((url) => ({
-          preview: url,
-          isDefault: false,
-        })) || []
-      );
-
-      setSelectedCategory(initialData.category || '');
-    }
-  }, [initialData]);
+  
 
   return (
     <div className="w-full mx-auto flex flex-col items-center pt-3">
@@ -217,7 +219,7 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
               name="name"
               onChange={handleInputsChange}
               value={inputs.name}
-              className="placeholder:text-gray-500 border-2 rounded-lg py-2 px-4"
+              className="placeholder:text-gray-500 border-2 rounded-lg py-2 px-4 focus:outline-none focus:border-teal-300"
             />
             {error.name && (
               <p className="text-red-400 flex items-center gap-2">
@@ -241,7 +243,7 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
               name="price"
               onChange={handleInputsChange}
               value={inputs.price}
-              className="placeholder:text-gray-500 border-2 rounded-lg py-2 px-4"
+              className="placeholder:text-gray-500 border-2 rounded-lg py-2 px-4 focus:outline-none focus:border-teal-300"
             />
             {error.price && (
               <p className="text-red-400 flex items-center gap-2">
@@ -262,7 +264,7 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
               name="description"
               onChange={handleInputsChange}
               value={inputs.description}
-              className="placeholder:text-gray-500 placeholder:pl-1 border-2 rounded-lg pl-2 h-40 py-2"
+              className="placeholder:text-gray-500 placeholder:pl-1 border-2 rounded-lg pl-2 h-40 py-2 focus:outline-none focus:border-teal-300"
             />
           </div>
           {error.description && (

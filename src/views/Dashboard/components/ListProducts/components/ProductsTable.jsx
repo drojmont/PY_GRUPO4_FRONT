@@ -6,6 +6,7 @@ import {
   Avatar,
   IconButton,
   Tooltip,
+  Chip,
 } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import useEvents from '../../../../../Hooks/useEvents';
@@ -14,8 +15,9 @@ import { LuTrash2 } from 'react-icons/lu';
 import PaginationTable from './PaginationTable';
 import DeleteModal from './DeleteModal';
 import { useNavigate } from 'react-router';
+import EditCategory from './EditCategory';
 
-const TABLE_HEAD = ['Id', 'Nombre', 'Acciones'];
+const TABLE_HEAD = ['Id', 'Nombre', 'Categoría', 'Acciones'];
 
 const TABLE_ROWS = [
   {
@@ -67,9 +69,10 @@ const TABLE_ROWS = [
 
 const ProductsTable = () => {
   const { events, isLoading } = useEvents();
-  const [eventId, setEventId] = useState(null);
 
-  //Paginación
+  const [eventId, setEventId] = useState(null);
+  // const [categoryId, setCategoryId] = useState(null);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const totalPages = Math.ceil(events?.length / itemsPerPage);
@@ -79,21 +82,22 @@ const ProductsTable = () => {
 
   // Estado para los eventos paginados
   const [currentEventsPerPage, setCurrentEventsPerPage] = useState([]);
- 
+  // console.log("Estado de los eventos en la tabla ", currentEventsPerPage)
 
-  // useEffect(() => {
-  //   console.log("Eventos actualizados:", events);
-  // }, [events]);
+  useEffect(() => {
+    console.log('UseEffect Eventos actualizados:', events);
+  }, [events]);
 
   // Actualiza la lista paginada cuando cambien los eventos o la página actual
   useEffect(() => {
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const updateEvents =events?.slice(indexOfFirstItem, indexOfLastItem)
+    const updateEvents = events?.slice(indexOfFirstItem, indexOfLastItem);
     setCurrentEventsPerPage(updateEvents);
   }, [events, currentPage, itemsPerPage]);
 
   const [openModal, setOpenModal] = useState(false);
+  const [openModalCategory, setOpenModalCategory] = useState(false);
 
   const navigate = useNavigate();
 
@@ -106,9 +110,16 @@ const ProductsTable = () => {
     navigate(`/administracion/editar-producto/${id}`);
   };
 
+  const handleUpdateCategory = (id) => {
+    console.log("hadle que obtine categoria para el padre table", id)
+    setEventId(id);
+    setOpenModalCategory(true);
+  };
+
+  // max-h-[540px]
   return (
     <Card className="h-full w-full mx-auto max-w-[900px] border mb-5">
-      <CardBody className="max-h-[540px] overflow-hidden  overflow-x-auto p-0 ">
+      <CardBody className=" overflow-hidden  overflow-x-auto p-0 ">
         <table className=" w-full min-w-max table-auto text-left">
           <thead>
             <tr>
@@ -138,7 +149,7 @@ const ProductsTable = () => {
                 </td>
               </tr>
             ) : (
-              currentEventsPerPage?.map(({ id, name, images }, index) => {
+              events.map(({ id, name, images, categoryOutputDTO }, index) => {
                 const isLast = index === TABLE_ROWS.length - 1;
                 const classes = isLast ? 'p-4' : 'p-4 ';
 
@@ -171,8 +182,33 @@ const ProductsTable = () => {
                       </div>
                     </td>
                     <td className={classes}>
+                      <div className="flex flex-col px-2">
+                        <Chip
+                          className="capitalize bg-anti-flash-white pr-2"
+                          value={
+                            <div className="pr-2 text-blue-gray-400">
+                              <Tooltip
+                                content="Editar categoría"
+                                className="bg-anti-flash-white text-jet"
+                              >
+                                <IconButton
+                                  variant="text"
+                                  onClick={() => handleUpdateCategory(id)}
+                                >
+                                  <MdOutlineEdit size={18} />
+                                </IconButton>
+                              </Tooltip>{' '}
+                              {!categoryOutputDTO
+                                ? 'Sin categoría'
+                                : categoryOutputDTO.name}
+                            </div>
+                          }
+                        />
+                      </div>
+                    </td>
+                    <td className={classes}>
                       <Tooltip
-                        content="Editar"
+                        content="Editar evento"
                         className="bg-anti-flash-white text-jet"
                       >
                         <IconButton
@@ -183,7 +219,7 @@ const ProductsTable = () => {
                         </IconButton>
                       </Tooltip>
                       <Tooltip
-                        content="Eliminar"
+                        content="Eliminar evento"
                         className="bg-anti-flash-white text-jet"
                       >
                         <IconButton
@@ -209,6 +245,13 @@ const ProductsTable = () => {
           setCurrentPage={setCurrentPage}
         />
       </CardFooter>
+      {/* Editar Categoría */}
+      <EditCategory
+        open={openModalCategory}
+        onClose={() => setOpenModalCategory(false)}
+        eventId={eventId}
+        setOpenModal={setOpenModalCategory}
+      />
       {/* Componente del modal para eliminar un producto */}
       <DeleteModal
         open={openModal}

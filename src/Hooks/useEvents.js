@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   createProduct,
   deleteProduct,
@@ -8,72 +8,170 @@ import {
 // import data from '../data/events';
 // import EVENTS from '../utils/constantsLocalSorage';
 
+// const useEvents = () => {
+//   const [events, setEvents] = useState([]);
+//   const [isLoading, setIsLoading] = useState(true);
+//   const [errorApi, setErrorApi] = useState('');
+
+//   useEffect(() => {
+//     const fetchEvents = async () => {
+//       try {
+//         const data = await getProducts();
+//         setEvents(data);
+//         // console.log("eventos", data)
+//       } catch (error) {
+//         console.error('Error al obtener productos:', error);
+//         setErrorApi(error.message);
+//       } finally {
+//         setIsLoading(false);
+//       }
+//     };
+
+//     fetchEvents();
+//   }, []);
+
+//   const reloadEvents = async () => {
+//     try {
+//       const updatedList = await getProducts();
+//       // console.log('🔄 Forzando recarga:', updatedList);
+//       setEvents([...updatedList]);
+//     } catch (error) {
+//       console.error('❌ Error al recargar eventos:', error);
+//     }
+//   };
+
+//   /* Agregar un Evento */
+//   const addEvent = async (newEvent) => {
+//     try {
+//       await createProduct(newEvent);
+//       const updatedList = await getProducts();
+//       setEvents(updatedList);
+//       reloadEvents();
+//       return null; // Sin error
+//     } catch (error) {
+//       console.error('Ha ocurrido un error al registrar un evento', error);
+//       setErrorApi(error.message);
+//       return error.message;
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   };
+
+//   /* Actualizar Evento */
+//   const updateEvent = async (id, updatedProduct) => {
+//     try {
+//       await updateProduct(id, updatedProduct);
+//       const updatedList = await getProducts();
+//       setEvents(updatedList);
+//     } catch (error) {
+//       console.log('Ocurrio un error al intentar actiualizar un evento ', error);
+//       setErrorApi(error.message);
+//       return error.message;
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   };
+
+//   /* Eliminar Evento */
+//   const deleteEvent = async (id) => {
+//     try {
+//       console.log('⏳ Eliminando evento con id:', id);
+//       await deleteProduct(id);
+//       console.log('✅ Evento eliminado con éxito en el backend');
+//       // setEvents((prevEvents) => prevEvents.filter((event) => event.id !== id));
+//       const updatedList = await getProducts();
+//       console.log("Lista Actualizada luego de eliminar", updatedList )
+//       setEvents(updatedList);
+//       reloadEvents();
+//       console.log('📊 Lista actualizada desde el backend:', updatedList);
+//     } catch (error) {
+//       console.log(
+//         'Ha ocurrido un error al intentar eliminar el evento con id' + id,
+//         error
+//       );
+//       setErrorApi(error.message);
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   };
+
+//   return {
+//     events,
+//     isLoading,
+//     errorApi,
+//     setIsLoading,
+//     addEvent,
+//     updateEvent,
+//     deleteEvent,
+//   };
+// };
+
+
 const useEvents = () => {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorApi, setErrorApi] = useState('');
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const data = await getProducts();
-        setEvents(data);
-      } catch (error) {
-        console.error('Error al obtener productos:', error);
-        setErrorApi(error.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchEvents();
+  /* 🟢 Obtener eventos (Reutilizable) */
+  const fetchEvents = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const data = await getProducts();
+      setEvents([...data]); // Nueva referencia al estado
+    } catch (error) {
+      console.error('❌ Error al obtener productos:', error);
+      setErrorApi(error.message || 'Error desconocido');
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
-  /* Agregar un Evento */
+  /* 🔄 Cargar eventos al montar el componente */
+  useEffect(() => {
+    fetchEvents();
+  }, [fetchEvents]);
+
+  /* ➕ Agregar un Evento */
   const addEvent = async (newEvent) => {
     try {
+      setIsLoading(true);
       await createProduct(newEvent);
-      const updatedList = await getProducts();
-      setEvents(updatedList);
-
-      return null; // Sin error
+      await fetchEvents(); // Actualiza desde el backend una vez creado
     } catch (error) {
-      console.error('Ha ocurrido un error al registrar un evento', error);
-      setErrorApi(error.message);
+      console.error('❌ Error al agregar evento:', error);
+      setErrorApi(error.message || 'Error al agregar evento');
       return error.message;
     } finally {
       setIsLoading(false);
     }
   };
 
-  /* Actualizar Evento */
+  /* ✏️ Actualizar Evento */
   const updateEvent = async (id, updatedProduct) => {
     try {
+      setIsLoading(true);
       await updateProduct(id, updatedProduct);
-      const updatedList = await getProducts();
-      setEvents(updatedList);
+      await fetchEvents(); // Actualiza la lista
     } catch (error) {
-      console.log('Ocurrio un error al intentar actiualizar un evento ', error);
-      setErrorApi(error.message);
+      console.error('❌ Error al actualizar evento:', error);
+      setErrorApi(error.message || 'Error al actualizar');
       return error.message;
     } finally {
       setIsLoading(false);
     }
   };
 
-  /* Eliminar Evento */
+  /* ❌ Eliminar Evento */
   const deleteEvent = async (id) => {
     try {
+      setIsLoading(true);
+      console.log('⏳ Eliminando evento con id:', id);
       await deleteProduct(id);
+      // Actualizar estado local optimizando el rendimiento:
       setEvents((prevEvents) => prevEvents.filter((event) => event.id !== id));
-      const updatedList = await getProducts();
-      setEvents(updatedList);
     } catch (error) {
-      console.log(
-        'Ha ocurrido un error al intentar eliminar el evento con id' + id,
-        error
-      );
-      setErrorApi(error.message);
+      console.error('❌ Error al eliminar evento:', error);
+      setErrorApi(error.message || 'Error al eliminar');
     } finally {
       setIsLoading(false);
     }
@@ -83,12 +181,15 @@ const useEvents = () => {
     events,
     isLoading,
     errorApi,
-    setIsLoading,
     addEvent,
     updateEvent,
     deleteEvent,
+    reloadEvents: fetchEvents, // Por si necesitas forzar la recarga desde un componente
   };
 };
+
+
+
 
 export default useEvents;
 
