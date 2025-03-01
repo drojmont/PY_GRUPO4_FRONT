@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import RecomendadosCard from "./RecomendadosCard";
-import useEvents from "../../../Hooks/useEvents";
+// import useEvents from "../../../Hooks/useEvents";
+import { EventContext } from "../../../context/ProductContext";
 
 const RecomendadosHome = () => {
-  const { events } = useEvents();
+  const { events } = useContext(EventContext);
   const [startIndex, setStartIndex] = useState(0);
   const [eventsToDisplay, setEventsToDisplay] = useState([]);
   const itemsPerPage = 10; 

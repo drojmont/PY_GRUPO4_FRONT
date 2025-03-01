@@ -8,7 +8,6 @@ const PaginationTable = ({
   onPageChange,
   setCurrentPage,
 }) => {
- 
 
   const goToPage = (page) => {
     if (page >= 1 && page <= totalPages) {

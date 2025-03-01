@@ -1,12 +1,14 @@
 import { useNavigate } from "react-router";
-import useEvents from "../../../../../Hooks/useEvents";
+// import useEvents from "../../../../../Hooks/useEvents";
 import { toast } from "react-toastify";
 import ProductForm from "../ProductForm";
+import { useContext } from "react";
+import { EventContext } from "../../../../../context/ProductContext";
 
 
 const CreateProduct=()=>{
 
-  const { addEvent } = useEvents();
+  const { addEvent } = useContext(EventContext);
   const navigate = useNavigate();
 
   const handleCreate = async (newProduct) => {
