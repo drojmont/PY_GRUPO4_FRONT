@@ -23,6 +23,7 @@ const EditCategory = ({ open, onClose, eventId, setEvents, setOpenModal }) => {
       if (open && eventId) {
         try {
           const dataEvent = await getProductById(eventId);
+          // console.log("evento en el modal de editar categoria", dataEvent)
           setSelectedCategory(dataEvent.categoryOutputDTO?.name || "");
         } catch (error) {
           console.error("Error al obtener la categoría:", error);
@@ -65,7 +66,7 @@ const EditCategory = ({ open, onClose, eventId, setEvents, setOpenModal }) => {
       <DialogFooter className="flex flex-col gap-4 items-center font-light">
         <SelectCategory
           onGetCategory={(categoryId) => setSelectedCategory(categoryId)}
-          defaultCategory={selectedCategory}
+          valueCategoryModal={selectedCategory}
         />
 
         <div className="flex gap-2">

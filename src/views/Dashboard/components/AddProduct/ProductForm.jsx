@@ -13,9 +13,6 @@ import { SelectCategory } from './components/SelectCategory';
 import { EventContext } from '../../../../context/ProductContext';
 
 const ProductForm = ({ onSubmit, initialData = {} }) => {
-
-  console.log("Info del evento en actualizar: ", initialData)
-
   const { events } = useContext(EventContext);
 
   const [images, setImages] = useState(
@@ -56,18 +53,18 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
         description: initialData.description ?? '',
         categoryOutputDTO: initialData.categoryOutputDTO?.name ?? '',
       }));
-  
+
       setImages(
         initialData.images?.map((url) => ({
           preview: url,
           isDefault: false,
         })) ?? []
       );
-  
+
       setSelectedCategory(initialData.categoryOutputDTO ?? null);
     }
   }, [initialData]);
-  
+
   const handleInputsChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -111,6 +108,7 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
     e.preventDefault();
 
     const errors = validationCreateProduct(inputs);
+    console.log(errors);
 
     if (images.some((image) => image.isDefault)) {
       //errors.images = "Debes agregar 5 imágenes para tu evento";
@@ -179,7 +177,6 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
 
   return (
     <div className="w-full mx-auto flex flex-col items-center pt-3">
-      
       {/* Componente de las Imagenes */}
       <ImageUploader
         images={images}
@@ -239,8 +236,16 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
               Seleciona una Categoría
             </Typography>
             {/* Componente que maneja la lista de categorias */}
-            <SelectCategory onGetCategory={handleGetCategory} initialData={initialData}/>
-
+            <SelectCategory
+              onGetCategory={handleGetCategory}
+              initialData={initialData}
+            />
+            {/* {error.category && (
+              <p className="text-red-400 flex items-center gap-2">
+                <TbAlertCircle color="red" />
+                {error.category}
+              </p>
+            )} */}
             <Typography variant="h6" color="blue-gray" className="-mb-3">
               Descripción
             </Typography>

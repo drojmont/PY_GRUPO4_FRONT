@@ -70,7 +70,6 @@ const TABLE_ROWS = [
 ];
 
 const ProductsTable = () => {
-  
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [eventId, setEventId] = useState(null);
@@ -79,9 +78,8 @@ const ProductsTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const totalPages = Math.ceil(events?.length / itemsPerPage);
-    // Estado para los eventos paginados
+  // Estado para los eventos paginados
   const [currentEventsPerPage, setCurrentEventsPerPage] = useState([]);
- 
 
   useEffect(() => {
     const api = async () => {
@@ -121,13 +119,10 @@ const ProductsTable = () => {
   };
 
   const handleUpdateCategory = (id) => {
-    console.log('hadle que obtine categoria para el padre table', id);
     setEventId(id);
     setOpenModalCategory(true);
   };
 
-  
-        
   return (
     <Card className="h-full w-full mx-auto max-w-[900px] border mb-5">
       <CardBody className="max-h-[540px] overflow-hidden  overflow-x-auto p-0 ">
@@ -160,90 +155,92 @@ const ProductsTable = () => {
                 </td>
               </tr>
             ) : (
-              currentEventsPerPage?.map(({ id, name, images, categoryOutputDTO }, index) => {
-                const isLast = index === TABLE_ROWS.length - 1;
-                const classes = isLast ? 'p-4' : 'p-4 ';
+              currentEventsPerPage?.map(
+                ({ id, name, images, categoryOutputDTO }, index) => {
+                  const isLast = index === TABLE_ROWS.length - 1;
+                  const classes = isLast ? 'p-4' : 'p-4 ';
 
-                return (
-                  <tr
-                    key={`item-product-${id}`}
-                    className="border-b border-anti-flash-white border-[3px] "
-                  >
-                    <td className={classes}>
-                      <div className="flex flex-col px-4">
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {id}
-                        </Typography>
-                      </div>
-                    </td>
-                    <td className={classes}>
-                      <div className="flex items-center gap-3">
-                        <Avatar src={images[0]} alt={name} size="lg" />
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {name}
-                        </Typography>
-                      </div>
-                    </td>
-                    <td className={classes}>
-                      <div className="flex flex-col px-2">
-                        <Chip
-                          className="capitalize bg-transparent pr-2"
-                          value={
-                            <div className="pr-2 text-blue-gray-400">
-                              <Tooltip
-                                content="Editar categoría"
-                                className="bg-anti-flash-white text-jet"
-                              >
-                                <IconButton
-                                  variant="text"
-                                  onClick={() => handleUpdateCategory(id)}
+                  return (
+                    <tr
+                      key={`item-product-${id}`}
+                      className="border-b border-anti-flash-white border-[3px] "
+                    >
+                      <td className={classes}>
+                        <div className="flex flex-col px-4">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {id}
+                          </Typography>
+                        </div>
+                      </td>
+                      <td className={classes}>
+                        <div className="flex items-center gap-3">
+                          <Avatar src={images[0]} alt={name} size="lg" />
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {name}
+                          </Typography>
+                        </div>
+                      </td>
+                      <td className={classes}>
+                        <div className="flex flex-col px-2">
+                          <Chip
+                            className="capitalize bg-transparent pr-2"
+                            value={
+                              <div className="pr-2 text-blue-gray-400">
+                                <Tooltip
+                                  content="Editar categoría"
+                                  className="bg-anti-flash-white text-jet"
                                 >
-                                  <MdOutlineEdit size={18} />
-                                </IconButton>
-                              </Tooltip>{' '}
-                              {!categoryOutputDTO
-                                ? 'Sin categoría'
-                                : categoryOutputDTO.name}
-                            </div>
-                          }
-                        />
-                      </div>
-                    </td>
-                    <td className={classes}>
-                      <Tooltip
-                        content="Editar evento"
-                        className="bg-anti-flash-white text-jet"
-                      >
-                        <IconButton
-                          variant="text"
-                          onClick={() => handleUpdateProduct(id)}
+                                  <IconButton
+                                    variant="text"
+                                    onClick={() => handleUpdateCategory(id)}
+                                  >
+                                    <MdOutlineEdit size={18} />
+                                  </IconButton>
+                                </Tooltip>{' '}
+                                {!categoryOutputDTO
+                                  ? 'Sin categoría'
+                                  : categoryOutputDTO.name}
+                              </div>
+                            }
+                          />
+                        </div>
+                      </td>
+                      <td className={classes}>
+                        <Tooltip
+                          content="Editar evento"
+                          className="bg-anti-flash-white text-jet"
                         >
-                          <MdOutlineEdit size={18} />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip
-                        content="Eliminar evento"
-                        className="bg-anti-flash-white text-jet"
-                      >
-                        <IconButton
-                          variant="text"
-                          onClick={() => handleGetIdDeleteIcon(id)}
+                          <IconButton
+                            variant="text"
+                            onClick={() => handleUpdateProduct(id)}
+                          >
+                            <MdOutlineEdit size={18} />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip
+                          content="Eliminar evento"
+                          className="bg-anti-flash-white text-jet"
                         >
-                          <LuTrash2 size={16} />
-                        </IconButton>
-                      </Tooltip>
-                    </td>
-                  </tr>
-                );
-              })
+                          <IconButton
+                            variant="text"
+                            onClick={() => handleGetIdDeleteIcon(id)}
+                          >
+                            <LuTrash2 size={16} />
+                          </IconButton>
+                        </Tooltip>
+                      </td>
+                    </tr>
+                  );
+                }
+              )
             )}
           </tbody>
         </table>
