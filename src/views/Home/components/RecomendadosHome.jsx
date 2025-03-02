@@ -1,25 +1,32 @@
-import { useContext, useEffect, useState } from "react";
-import RecomendadosCard from "./RecomendadosCard";
+import { useContext, useEffect, useState } from 'react';
+import RecomendadosCard from './RecomendadosCard';
 // import useEvents from "../../../Hooks/useEvents";
-import { EventContext } from "../../../context/ProductContext";
+import { EventContext } from '../../../context/ProductContext';
 
 const RecomendadosHome = () => {
-  const { events } = useContext(EventContext);
+  const { events, fetchEvents } = useContext(EventContext);
   const [startIndex, setStartIndex] = useState(0);
   const [eventsToDisplay, setEventsToDisplay] = useState([]);
-  const itemsPerPage = 10; 
-  
+  const itemsPerPage = 10;
+
   useEffect(() => {
-    if (events.length > 0) {
+    fetchEvents();
+  }, []);
+
+  useEffect(() => {
+    if (events.length > 0 && eventsToDisplay.length === 0) {
       const shuffled = [...events].sort(() => Math.random() - 0.5);
       setEventsToDisplay(shuffled);
-      setStartIndex(0); 
+      setStartIndex(0);
     }
   }, [events]);
 
   const totalPages = Math.ceil(eventsToDisplay.length / itemsPerPage);
   const currentPage = Math.floor(startIndex / itemsPerPage) + 1;
-  const visibleEvents = eventsToDisplay.slice(startIndex, startIndex + itemsPerPage);
+  const visibleEvents = eventsToDisplay.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   const goToPage = (page) => {
     setStartIndex((page - 1) * itemsPerPage);
@@ -40,7 +47,9 @@ const RecomendadosHome = () => {
           onClick={() => goToPage(1)}
           disabled={currentPage === 1}
           className={`px-4 py-2 rounded-md text-white ${
-            currentPage === 1 ? "bg-gray-400 cursor-not-allowed" : "bg-[#3C6E71] hover:opacity-80"
+            currentPage === 1
+              ? 'bg-gray-400 cursor-not-allowed'
+              : 'bg-[#3C6E71] hover:opacity-80'
           }`}
         >
           Ir al inicio
@@ -52,7 +61,9 @@ const RecomendadosHome = () => {
             onClick={() => goToPage(i + 1)}
             disabled={currentPage === i + 1}
             className={`px-3 py-2 rounded-md ${
-              currentPage === i + 1 ? "bg-[#3C6E71] text-white font-bold" : "bg-gray-200 text-black hover:bg-gray-300"
+              currentPage === i + 1
+                ? 'bg-[#3C6E71] text-white font-bold'
+                : 'bg-gray-200 text-black hover:bg-gray-300'
             }`}
           >
             {i + 1}
@@ -63,7 +74,9 @@ const RecomendadosHome = () => {
           onClick={() => goToPage(totalPages)}
           disabled={currentPage === totalPages}
           className={`px-4 py-2 rounded-md text-white ${
-            currentPage === totalPages ? "bg-gray-400 cursor-not-allowed" : "bg-[#3C6E71] hover:opacity-80"
+            currentPage === totalPages
+              ? 'bg-gray-400 cursor-not-allowed'
+              : 'bg-[#3C6E71] hover:opacity-80'
           }`}
         >
           Ir al final

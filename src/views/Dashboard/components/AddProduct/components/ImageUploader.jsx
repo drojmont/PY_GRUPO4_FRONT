@@ -227,7 +227,7 @@ export default function ImageUploader({ images, setImages, error }) {
     remainingSlots === 1 ? 'imagen restante' : 'imágenes restantes';
 
   return (
-    <div className="p-4 border rounded-lg shadow-md bg-white">
+    <div className="p-4 border rounded-lg shadow-md bg-anti-flash-white">
       <div className="flex justify-between items-center">
         <h2 className="font-bold text-lg mb-2">Agregar Imagen</h2>
         <p className="text-sm text-gray-500 mb-2">
@@ -237,7 +237,7 @@ export default function ImageUploader({ images, setImages, error }) {
 
       <div
         {...getRootProps()}
-        className={`border-2 border-dashed p-6 text-center cursor-pointer mb-4 ${
+        className={`border-2 border-dashed p-6 text-center bg-white shadow-lg cursor-pointer mb-4 ${
           remainingSlots === 0 ? 'opacity-50 cursor-not-allowed' : ''
         }`}
       >

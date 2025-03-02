@@ -13,7 +13,9 @@ import { SelectCategory } from './components/SelectCategory';
 import { EventContext } from '../../../../context/ProductContext';
 
 const ProductForm = ({ onSubmit, initialData = {} }) => {
-  
+
+  console.log("Info del evento en actualizar: ", initialData)
+
   const { events } = useContext(EventContext);
 
   const [images, setImages] = useState(
@@ -24,16 +26,14 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
         isDefault: true,
       }))
   );
-
   const [selectedCategory, setSelectedCategory] = useState(0);
-  
-
   const [inputs, setInputs] = useState({
     name: '',
     price: '',
     description: '',
   });
   const [error, setError] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const currentIdEvent = initialData.id;
 
@@ -49,24 +49,25 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
 
   useEffect(() => {
     if (initialData && Object.keys(initialData).length > 0) {
-      setInputs({
-        name: initialData.name || '',
-        price: initialData.price || '',
-        description: initialData.description || '',
-        categoryOutputDTO: initialData.category || '',
-      });
-
+      setInputs((prevInputs) => ({
+        ...prevInputs,
+        name: initialData.name ?? '',
+        price: initialData.price ?? '',
+        description: initialData.description ?? '',
+        categoryOutputDTO: initialData.categoryOutputDTO?.name ?? '',
+      }));
+  
       setImages(
         initialData.images?.map((url) => ({
           preview: url,
           isDefault: false,
-        })) || []
+        })) ?? []
       );
-
-      setSelectedCategory(initialData.category || '');
+  
+      setSelectedCategory(initialData.categoryOutputDTO ?? null);
     }
   }, [initialData]);
-
+  
   const handleInputsChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -161,26 +162,7 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
         categoryId: selectedCategory,
       };
 
-       console.log(newProduct);
-      // const submitError = await addEvent(newProduct);
-
-      // if (submitError) {
-      //   toast(`Ocurrio un error inesperado al crear el evento`, {
-      //     type: 'error',
-      //     autoClose: 1500,
-      //   });
-      //   // toast(`Ocurrio un error inesperado al crear el evento: ${submitError}`, {
-      //   //   type: 'error',
-      //   //   autoClose: 1500,
-      //   // });
-      //   return;
-      // }
-
-      // toast('Nuevo Evento creado con éxito!', {
-      //   position: 'top-right',
-      //   type: 'success',
-      //   autoClose: 1500,
-      // });
+      console.log(newProduct);
       const errorSubmit = onSubmit(newProduct);
 
       if (!errorSubmit) {
@@ -188,16 +170,17 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
       }
 
       setError({});
+      setIsLoading(true);
     } catch (error) {
       console.error('Error creando el evento:', error);
       toast('Hubo un problema, intenta de nuevo', { type: 'error' });
     }
   };
 
-  
-
   return (
     <div className="w-full mx-auto flex flex-col items-center pt-3">
+      
+      {/* Componente de las Imagenes */}
       <ImageUploader
         images={images}
         setImages={setImages}
@@ -214,7 +197,6 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
             <Typography variant="h6" color="blue-gray" className="-mb-3">
               Nombre del Evento
             </Typography>
-
             <input
               placeholder="Tours de Tecnología"
               name="name"
@@ -234,10 +216,10 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
                 {error.nameRepeat}
               </p>
             )}
-            <Typography variant="h6" color="blue-gray" className="-mb-3">
+
+            {/* <Typography variant="h6" color="blue-gray" className="-mb-3">
               Precio del Evento
             </Typography>
-
             <input
               type="number"
               placeholder="500 USD"
@@ -251,12 +233,14 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
                 <TbAlertCircle color="red" />
                 {error.price}
               </p>
-            )}
+            )} */}
+
             <Typography variant="h6" color="blue-gray" className="-mb-3">
               Seleciona una Categoría
             </Typography>
             {/* Componente que maneja la lista de categorias */}
-            <SelectCategory onGetCategory={handleGetCategory} />
+            <SelectCategory onGetCategory={handleGetCategory} initialData={initialData}/>
+
             <Typography variant="h6" color="blue-gray" className="-mb-3">
               Descripción
             </Typography>
@@ -275,9 +259,9 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
             </p>
           )}
           <Button
-            className="block mx-auto mt-6 bg-sky capitalize text-[16px]"
+            className="block mx-auto my-6 bg-sky capitalize text-[16px]"
             type="submit"
-            disabled={Object.keys(error).length > 0}
+            disabled={Object.keys(error).length > 0 || isLoading}
           >
             {Object.keys(initialData)?.length
               ? 'Actualizar Evento'

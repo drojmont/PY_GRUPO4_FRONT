@@ -70,22 +70,16 @@ const TABLE_ROWS = [
 ];
 
 const ProductsTable = () => {
-  // const { events, isLoading } = useContext(EventContext);
-
+  
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [eventId, setEventId] = useState(null);
-  // const [categoryId, setCategoryId] = useState(null);
 
+  /* Paginado */
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const totalPages = Math.ceil(events?.length / itemsPerPage);
-
-  // const indexOfLastItem = currentPage * itemsPerPage;
-  // const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  // const currentEventsPerPage = events?.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Estado para los eventos paginados
+    // Estado para los eventos paginados
   const [currentEventsPerPage, setCurrentEventsPerPage] = useState([]);
  
 
@@ -201,7 +195,7 @@ const ProductsTable = () => {
                     <td className={classes}>
                       <div className="flex flex-col px-2">
                         <Chip
-                          className="capitalize bg-anti-flash-white pr-2"
+                          className="capitalize bg-transparent pr-2"
                           value={
                             <div className="pr-2 text-blue-gray-400">
                               <Tooltip
