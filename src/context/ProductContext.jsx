@@ -17,8 +17,7 @@ export const ProductContext = (props) => {
   const fetchEvents = async () => {
     try {
       const data = await getProducts();
-      setEvents([...data]);
-      // console.log("eventos", data)
+      setEvents(data);
     } catch (error) {
       console.error('Error al obtener productos:', error);
       setErrorApi(error.message);
@@ -27,11 +26,7 @@ export const ProductContext = (props) => {
     }
   };
 
-  /* Listar Eventos */
-  useEffect(() => {
-    fetchEvents();
-  }, []);
-
+  
   /* Agregar un Evento */
   const addEvent = async (newEvent) => {
     try {
