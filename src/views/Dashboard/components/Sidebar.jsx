@@ -28,6 +28,7 @@ const menuItems = [
     subItems: [
       { text: 'Lista', route: 'listar-productos' },
       { text: 'Crear Nuevo', route: 'crear-producto' },
+      { text: 'Caracteristicas', route: 'caracteristicas' },
     ],
   },
   {
