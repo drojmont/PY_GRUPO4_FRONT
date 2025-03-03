@@ -8,6 +8,7 @@ import CreateProduct from "./views/Dashboard/components/AddProduct/components/Cr
 import ListProducts from "./views/Dashboard/components/ListProducts/ListProducts";
 import Register from "./views/Register";
 import EditProduct from "./views/Dashboard/components/AddProduct/components/EditProduct";
+import Login from "./views/Auth/Login";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="/Detail/:id" element={<Detail />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         {/* Panel Administrador */}
         <Route path="/administracion" element={<Dashboard />}>
