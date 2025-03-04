@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import fondoLogin from '../../assets/fondoLogin.jpg';
 const Login = () => {
-    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         correoElectronico: '',
         password: ''
