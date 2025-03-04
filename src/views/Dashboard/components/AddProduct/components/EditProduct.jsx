@@ -1,6 +1,5 @@
 import { useParams, useNavigate } from 'react-router';
 import ProductForm from '../ProductForm';
-// import useEvents from '../../../../../Hooks/useEvents';
 import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { getProductById } from '../../../../../services/productService';
