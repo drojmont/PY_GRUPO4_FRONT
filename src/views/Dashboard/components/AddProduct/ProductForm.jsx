@@ -29,9 +29,9 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
   );
   const [selectedCategory, setSelectedCategory] = useState(0);
 
-    const [inputs, setInputs] = useState({
+  const [inputs, setInputs] = useState({
     name: '',
-    // price: '',
+    //price: '',
     description: '',
   });
   const [error, setError] = useState({});
@@ -96,7 +96,7 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
       }
     }
 
-       const cleanedErrors = { ...error };
+    const cleanedErrors = { ...error };
     Object.keys(error).forEach((key) => {
       if (!newErrors[key]) delete cleanedErrors[key];
     });
@@ -162,7 +162,7 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
 
       const newProduct = {
         name: inputs.name,
-        // price: inputs.price,
+        //price: inputs.price,
         description: inputs.description,
         images: imageUrls,
         categoryId: selectedCategory,
@@ -222,7 +222,7 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
               </p>
             )}
 
-            {/* <Typography variant="h6" color="blue-gray" className="-mb-3">
+            {/*       <Typography variant="h6" color="blue-gray" className="-mb-3">
               Precio del Evento
             </Typography>
             <input

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getCategories } from '../../../../../services/categoryService';
 
-
 export const SelectCategory = ({
   onGetCategory,
   initialData,
@@ -11,7 +10,6 @@ export const SelectCategory = ({
 }) => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
-  console.log("estado de la categoria en el Select ", selectedCategory)
   const [isLoading, setIsLoading] = useState(true);
   const [errorApi, setErrorApi] = useState('');
 
@@ -33,8 +31,6 @@ export const SelectCategory = ({
 
   // Sincronizar el valor del select con valueCategoryModal
   useEffect(() => {
-    console.log('valueCategoryModal: ', valueCategoryModal);
-    console.log('initialData: ', initialData);
     if (valueCategoryModal) {
       setSelectedCategory(valueCategoryModal);
     } else if (initialData?.categoryOutputDTO?.name) {

@@ -20,11 +20,6 @@ const CreateProduct=()=>{
             type: 'error',
             autoClose: 1500,
           });
-          // Cuando me traiga el mjs del backend
-          // toast(`Ocurrio un error inesperado al crear el evento: ${submitError}`, {
-          //   type: 'error',
-          //   autoClose: 1500,
-          // });
           return submitError;
         }
   
