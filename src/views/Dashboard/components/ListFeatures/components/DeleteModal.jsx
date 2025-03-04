@@ -5,9 +5,9 @@ import {
   Button,
 } from '@material-tailwind/react';
 import {
-  deleteProduct,
-  getProducts,
-} from '../../../../../services/productService';
+  deleteFeatures,
+  getFeatures,
+} from '../../../../../services/featuresService';
 import { useState } from 'react';
 
 const DeleteModal = ({
@@ -20,12 +20,12 @@ const DeleteModal = ({
     if (!eventId) return;
     try {
       setIsDeleting(true);
-      await deleteProduct(eventId);
-      const updateEvents = await getProducts();
+      await deleteFeatures(eventId);
+      const updateEvents = await getFeatures();
       setEvents([...updateEvents]);
       setOpenModal(false);
     } catch (error) {
-      console.error('Error al eliminar el evento:', error);
+      console.error('Error al eliminar la caracteristica:', error);
     } finally {
       setIsDeleting(false);
     }

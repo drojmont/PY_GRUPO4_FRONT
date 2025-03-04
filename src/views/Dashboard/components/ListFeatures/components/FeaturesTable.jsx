@@ -5,19 +5,17 @@ import {
   CardFooter,
   Avatar,
   IconButton,
-  Tooltip,
-  Chip,
+  Tooltip
 } from '@material-tailwind/react';
-import { useContext, useEffect, useState } from 'react';
-// import useEvents from '../../../../../Hooks/useEvents';
+import {  useEffect, useState } from 'react';
+
 import { MdOutlineEdit } from 'react-icons/md';
 import { LuTrash2 } from 'react-icons/lu';
 import PaginationTable from './PaginationTable';
 import DeleteModal from './DeleteModal';
 import { useNavigate } from 'react-router';
-import EditCategory from './EditCategory';
-import { EventContext } from '../../../../../context/ProductContext';
-import { getProducts } from '../../../../../services/productService';
+
+import { getFeatures } from '../../../../../services/featuresService';
 
 const TABLE_HEAD = ['Id', 'Nombre','', 'Acciones'];
 
@@ -31,60 +29,23 @@ const TABLE_ROWS = [
     online: true,
     date: '23/04/18',
   },
-  {
-    img: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg',
-    name: 'Alexa Liras',
-    email: 'alexa@creative-tim.com',
-    job: 'Programator',
-    org: 'Developer',
-    online: false,
-    date: '23/04/18',
-  },
-  {
-    img: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg',
-    name: 'Laurent Perrier',
-    email: 'laurent@creative-tim.com',
-    job: 'Executive',
-    org: 'Projects',
-    online: false,
-    date: '19/09/17',
-  },
-  {
-    img: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-4.jpg',
-    name: 'Michael Levi',
-    email: 'michael@creative-tim.com',
-    job: 'Programator',
-    org: 'Developer',
-    online: true,
-    date: '24/12/08',
-  },
-  {
-    img: 'https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-5.jpg',
-    name: 'Richard Gran',
-    email: 'richard@creative-tim.com',
-    job: 'Manager',
-    org: 'Executive',
-    online: false,
-    date: '04/10/21',
-  },
+
 ];
 
 const FeaturesTable = () => {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [eventId, setEventId] = useState(null);
-
-  /* Paginado */
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const totalPages = Math.ceil(events?.length / itemsPerPage);
-  // Estado para los eventos paginados
+
   const [currentEventsPerPage, setCurrentEventsPerPage] = useState([]);
 
   useEffect(() => {
     const api = async () => {
       try {
-        const response = await getProducts();
+        const response = await getFeatures();
         setEvents([...response]);
       } catch (error) {
         console.error('Error fetching dentists:', error);
@@ -95,7 +56,7 @@ const FeaturesTable = () => {
     api();
   }, []);
 
-  // Actualiza la lista paginada cuando cambien los eventos o la página actual
+
   useEffect(() => {
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -105,7 +66,7 @@ const FeaturesTable = () => {
   }, [events, currentPage, itemsPerPage]);
 
   const [openModal, setOpenModal] = useState(false);
-  const [openModalCategory, setOpenModalCategory] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -115,7 +76,7 @@ const FeaturesTable = () => {
   };
 
   const handleUpdateProduct = (id) => {
-    navigate(`/administracion/editar-producto/${id}`);
+    navigate(`/administracion/caracteristicas/${id}`);
   };
 
 
@@ -147,12 +108,12 @@ const FeaturesTable = () => {
             {isLoading ? (
               <tr>
                 <td colSpan="4" className="text-center py-5">
-                  <p>Cargando eventos...</p>
+                  <p>Cargando caracteristicas...</p>
                 </td>
               </tr>
             ) : (
               currentEventsPerPage?.map(
-                ({ id, name, images }, index) => {
+                ({ id, name, description }, index) => {
                   const isLast = index === TABLE_ROWS.length - 1;
                   const classes = isLast ? 'p-4' : 'p-4 ';
 
@@ -174,7 +135,7 @@ const FeaturesTable = () => {
                       </td>
                       <td className={classes}>
                         <div className="flex items-center gap-3">
-                          <Avatar src={images[0]} alt={name} size="lg" />
+                          <Avatar src={description} alt={name} size="lg" />
                           <Typography
                             variant="small"
                             color="blue-gray"
@@ -204,7 +165,7 @@ const FeaturesTable = () => {
                           </IconButton>
                         </Tooltip>
                         <Tooltip
-                          content="Eliminar evento"
+                          content="Eliminar Caracteristica"
                           className="bg-anti-flash-white text-jet"
                         >
                           <IconButton
@@ -231,14 +192,8 @@ const FeaturesTable = () => {
           setCurrentPage={setCurrentPage}
         />
       </CardFooter>
-      {/* Editar Categoría */}
-      <EditCategory
-        open={openModalCategory}
-        onClose={() => setOpenModalCategory(false)}
-        eventId={eventId}
-        setOpenModal={setOpenModalCategory}
-        setEvents={setEvents}
-      />
+
+
       {/* Componente del modal para eliminar un producto */}
       <DeleteModal
         open={openModal}
