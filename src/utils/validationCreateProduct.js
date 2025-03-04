@@ -1,4 +1,7 @@
-const validationCreateProduct = ({ name, description }, selectedCategory) => {
+const validationCreateProduct = (
+  { name, description, price },
+  selectedCategory
+) => {
   const errors = {};
 
   // Valida minimo 2 caracteres, contener al menos una letra
@@ -8,8 +11,9 @@ const validationCreateProduct = ({ name, description }, selectedCategory) => {
   const regexDescription = /^(?=.*[a-zA-ZñÑ])[\s\S]{10,}$/;
 
   //Expresión regular para precios en formato USD
-  // const regexPrice = /^(?!0\d)(\d{1,3}(,\d{3})*(\.\d{2})?|\d+(\.\d{2})?)$/;
+  const regexPrice = /^(?!0\d)(\d{1,3}(,\d{3})*(\.\d{2})?|\d+(\.\d{2})?)$/;
 
+  //Como funciona la expresion regular para el precio:
   // (?!0\d) → Evita ceros a la izquierda (no permite 0123).
   // \d{1,3}(,\d{3})* → Permite separar en miles con comas (ej: 1,500, 1,000,000).
   // (\.\d{2})? → Permite decimales con dos dígitos opcionales (ej: 1500.50).
@@ -25,12 +29,12 @@ const validationCreateProduct = ({ name, description }, selectedCategory) => {
     errors.name = 'El nombre debe contener menos de 50 caracteres';
   }
 
-  // if (!price.length) {
-  //   errors.price = 'Debes ingresar un precio para el evento';
-  // } else if (!regexPrice.test(price)) {
-  //   errors.price =
-  //     'El precio debe tener un formato válido (Ej: 1500, 1,500, 1500.50, 1,500.99)';
-  // }
+  if (!price.length) {
+    errors.price = 'Debes ingresar un precio para el evento';
+  } else if (!regexPrice.test(price)) {
+    errors.price =
+      'El precio debe tener un formato válido (Ej: 1500, 1,500, 1500.50, 1,500.99)';
+  }
 
   if (!description.length) {
     errors.description = 'Debes ingresar una descripción para el evento';
@@ -43,7 +47,7 @@ const validationCreateProduct = ({ name, description }, selectedCategory) => {
   }
 
   if (selectedCategory === 0) {
-    errors.categoryId = "Debes elegir una categoría";
+    errors.categoryId = 'Debes elegir una categoría';
   }
 
   return errors;
