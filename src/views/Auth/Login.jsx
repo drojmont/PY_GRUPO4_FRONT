@@ -50,10 +50,11 @@ const Login = () => {
 
         try {
             const apiUrl = import.meta.env.VITE_API_URL_DEVELOPMENT || 'http://localhost:8080';
-            const response = await axios.post(`${apiUrl}/api/user/login`, formData);
+            const response = await axios.post(`${apiUrl}/api/user/iniciar-sesion`, formData);
 
-            if (response.status === 201) {
-                navigate('/', { state: { message: '¡Acceso exitoso!' } });
+            if (response.status === 200) {
+                localStorage.setItem('userGoTrip', JSON.stringify(response.data));
+                window.location.href = '/';
             }
         } catch (error) {
             if (error.response && error.response.data) {
