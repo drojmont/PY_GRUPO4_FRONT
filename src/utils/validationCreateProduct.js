@@ -1,4 +1,4 @@
-const validationCreateProduct = ({ name, description }) => {
+const validationCreateProduct = ({ name, description }, selectedCategory) => {
   const errors = {};
 
   // Valida minimo 2 caracteres, contener al menos una letra
@@ -40,6 +40,10 @@ const validationCreateProduct = ({ name, description }) => {
     errors.description = 'La descripción debe contener menos de 500 caracteres';
   } else if (!regexDescription.test(description)) {
     errors.description = 'La descripción debe contener al menos una letra';
+  }
+
+  if (selectedCategory === 0) {
+    errors.categoryId = "Debes elegir una categoría";
   }
 
   return errors;

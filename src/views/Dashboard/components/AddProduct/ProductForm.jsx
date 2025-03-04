@@ -13,7 +13,11 @@ import { SelectCategory } from './components/SelectCategory';
 import { EventContext } from '../../../../context/ProductContext';
 
 const ProductForm = ({ onSubmit, initialData = {} }) => {
-  const { events } = useContext(EventContext);
+  const { events, fetchEvents } = useContext(EventContext);
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
   const [images, setImages] = useState(
     Array(5)
@@ -24,9 +28,10 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
       }))
   );
   const [selectedCategory, setSelectedCategory] = useState(0);
-  const [inputs, setInputs] = useState({
+
+    const [inputs, setInputs] = useState({
     name: '',
-    price: '',
+    // price: '',
     description: '',
   });
   const [error, setError] = useState({});
@@ -72,12 +77,13 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
     const updatedInputs = {
       ...inputs,
       [name]: value,
+      categoryId: selectedCategory,
     };
 
     setInputs(updatedInputs);
 
     // Primero, validamos los campos y actualizamos los errores
-    let newErrors = validationCreateProduct(updatedInputs);
+    let newErrors = validationCreateProduct(updatedInputs, selectedCategory);
 
     // Verificamos si el nombre ya existe
     if (name === 'name') {
@@ -90,14 +96,13 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
       }
     }
 
-    // Eliminamos errores corregidos
+       const cleanedErrors = { ...error };
     Object.keys(error).forEach((key) => {
-      if (!newErrors[key]) {
-        delete error[key];
-      }
+      if (!newErrors[key]) delete cleanedErrors[key];
     });
 
-    setError({ ...error, ...newErrors });
+    // Actualizar el estado con los errores limpios
+    setError({ ...cleanedErrors, ...newErrors });
   };
 
   const handleGetCategory = (id) => {
@@ -108,7 +113,6 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
     e.preventDefault();
 
     const errors = validationCreateProduct(inputs);
-    console.log(errors);
 
     if (images.some((image) => image.isDefault)) {
       //errors.images = "Debes agregar 5 imágenes para tu evento";
@@ -123,6 +127,10 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
 
     if (nameExists) {
       errors.nameRepeat = 'El nombre ya está en uso';
+    }
+
+    if (selectedCategory === 0) {
+      errors.categoryId = 'Debes elegir una categoría';
     }
 
     if (Object.keys(errors).length > 0) {
@@ -154,7 +162,7 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
 
       const newProduct = {
         name: inputs.name,
-        price: inputs.price,
+        // price: inputs.price,
         description: inputs.description,
         images: imageUrls,
         categoryId: selectedCategory,
@@ -164,7 +172,7 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
       const errorSubmit = onSubmit(newProduct);
 
       if (!errorSubmit) {
-        setInputs({ name: '', price: '', description: '' });
+        setInputs({ name: '', /* price: '' */ description: '' });
       }
 
       setError({});
@@ -239,13 +247,15 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
             <SelectCategory
               onGetCategory={handleGetCategory}
               initialData={initialData}
+              setError={setError}
+              error={error}
             />
-            {/* {error.category && (
+            {error.categoryId && (
               <p className="text-red-400 flex items-center gap-2">
                 <TbAlertCircle color="red" />
-                {error.category}
+                {error.categoryId}
               </p>
-            )} */}
+            )}
             <Typography variant="h6" color="blue-gray" className="-mb-3">
               Descripción
             </Typography>

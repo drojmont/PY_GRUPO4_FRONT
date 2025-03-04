@@ -23,7 +23,6 @@ const EditCategory = ({ open, onClose, eventId, setEvents, setOpenModal }) => {
       if (open && eventId) {
         try {
           const dataEvent = await getProductById(eventId);
-          // console.log("evento en el modal de editar categoria", dataEvent)
           setSelectedCategory(dataEvent.categoryOutputDTO?.name || "");
         } catch (error) {
           console.error("Error al obtener la categoría:", error);
@@ -76,7 +75,7 @@ const EditCategory = ({ open, onClose, eventId, setEvents, setOpenModal }) => {
             className="rounded-md capitalize font-light"
             disabled={isLoadingCategory}
           >
-            {isLoadingCategory ? <p>Actualizando Categoría...</p> : "Sí"}
+            {isLoadingCategory ? <p>Actualizando Categoría...</p> : "Aceptar"}
           </Button>
 
           <Button
