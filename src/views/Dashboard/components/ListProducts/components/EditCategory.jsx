@@ -1,29 +1,32 @@
-import { SelectCategory } from '../../AddProduct/components/SelectCategory';
+import { SelectCategory } from "../../AddProduct/components/SelectCategory";
 import {
   Button,
   Dialog,
   DialogBody,
   DialogFooter,
-} from '@material-tailwind/react';
+} from "@material-tailwind/react";
 import {
   getProductById,
   getProducts,
   updateProduct,
-} from '../../../../../services/productService';
-import { useEffect, useState } from 'react';
+} from "../../../../../services/productService";
+import { useEffect, useState } from "react";
 
 const EditCategory = ({ open, onClose, eventId, setEvents, setOpenModal }) => {
-
   const [isLoadingCategory, setIsLoadingCategory] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("");
- 
- 
+  const [selectedCategory, setSelectedCategory] = useState({});
+
+  const onCloseResetSelectedCartegory = () => {
+    setSelectedCategory({});
+    onClose();
+  };
+
   useEffect(() => {
     const fetchEventCategory = async () => {
       if (open && eventId) {
         try {
           const dataEvent = await getProductById(eventId);
-          setSelectedCategory(dataEvent.categoryOutputDTO?.name || "");
+          setSelectedCategory(dataEvent.categoryOutputDTO || {});
         } catch (error) {
           console.error("Error al obtener la categoría:", error);
         }
@@ -43,13 +46,13 @@ const EditCategory = ({ open, onClose, eventId, setEvents, setOpenModal }) => {
 
       const changeCategoryEvent = {
         ...eventWithoutCategory,
-        categoryId: selectedCategory,
+        categoryId: selectedCategory.id_category,
       };
 
       await updateProduct(eventId, changeCategoryEvent);
       const updatedEvents = await getProducts();
       setEvents(updatedEvents);
-      setOpenModal(false);
+      onCloseResetSelectedCartegory();
     } catch (error) {
       console.error("Ha ocurrido un error al cambiar la categoría:", error);
     } finally {
@@ -58,13 +61,18 @@ const EditCategory = ({ open, onClose, eventId, setEvents, setOpenModal }) => {
   };
 
   return (
-    <Dialog open={open} handler={onClose} size="xs" className="bg-[#CEE7E2]">
+    <Dialog
+      open={open}
+      handler={onCloseResetSelectedCartegory}
+      size="xs"
+      className="bg-[#CEE7E2]"
+    >
       <DialogBody className="text-center pb-0">
         <p>Editar categoría del Evento</p>
       </DialogBody>
       <DialogFooter className="flex flex-col gap-4 items-center font-light">
         <SelectCategory
-          onGetCategory={(categoryId) => setSelectedCategory(categoryId)}
+          onGetCategory={(category) => setSelectedCategory(category)}
           valueCategoryModal={selectedCategory}
         />
 
@@ -93,5 +101,3 @@ const EditCategory = ({ open, onClose, eventId, setEvents, setOpenModal }) => {
 };
 
 export default EditCategory;
-
-
