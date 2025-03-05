@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom"; // Importa useLocation para acceder a los parámetros de la URL
+import RecomendadosCard from "../views/Home/components/RecomendadosCard"; // Asegúrate de importar RecomendadosCard
 
 const Category = () => {
   const [categories, setCategories] = useState([]);
@@ -6,11 +8,18 @@ const Category = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
+  // Acceder a los parámetros de la URL
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const filterParam = queryParams.get("filter");
+
   // Obtener las categorías al cargar el componente
   useEffect(() => {
     fetch("http://localhost:8080/categorias")
       .then((response) => response.json())
-      .then((data) => setCategories(data))
+      .then((data) => {
+        setCategories(data);
+      })
       .catch((error) => console.error("Error obteniendo categorías:", error));
   }, []);
 
@@ -24,6 +33,13 @@ const Category = () => {
       })
       .catch((error) => console.error("Error obteniendo productos:", error));
   }, []);
+
+  // Aplicar filtro automáticamente si hay un parámetro "filter" en la URL
+  useEffect(() => {
+    if (filterParam) {
+      setSelectedCategories([parseInt(filterParam)]); // Convertimos el filtro a un número y lo agregamos a selectedCategories
+    }
+  }, [filterParam]);
 
   // Función para manejar la selección de categorías
   const handleCategoryChange = (categoryId) => {
@@ -42,9 +58,7 @@ const Category = () => {
       setFilteredProducts(products);
     } else {
       const filtered = products.filter((product) =>
-        product.categories.some((category) =>
-          selectedCategories.includes(category.id)
-        )
+        selectedCategories.includes(product.categoria.id_category)
       );
       setFilteredProducts(filtered);
     }
@@ -55,34 +69,35 @@ const Category = () => {
     setSelectedCategories([]);
   };
 
-  return (
-    <div className="w-full mt-10 p-4 text-center">
-      <h1 className="text-2xl font-bold">Categorías</h1>
-      <p className="text-gray-700 mt-2">
-        Filtra los productos según las categorías que elijas.
-      </p>
+  useEffect(() => {
+    if (products.length > 0) {
+      setFilteredProducts(products);
+    }
+  }, [products]);
 
+  return (
+    <div className="w-full mt-5 p-4 text-center">
       {/* Filtros de categorías */}
       <div className="mt-6 flex flex-wrap justify-center gap-4">
         {categories.map((category) => (
           <div
-            key={category.id}
+            key={category.id_category}
             className="flex items-center border border-[#3C6E71] bg-white rounded-lg px-4 py-2 gap-2"
           >
             <label
-              htmlFor={`category-${category.id}`}
+              htmlFor={`category-${category.id_category}`}
               className="text-[#3C6E71] font-semibold cursor-pointer"
-              onClick={() => handleCategoryChange(category.id)}
+              onClick={() => handleCategoryChange(category.id_category)}
             >
               {category.name}
             </label>
 
-            {selectedCategories.includes(category.id) && (
+            {selectedCategories.includes(category.id_category) && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setSelectedCategories((prevSelected) =>
-                    prevSelected.filter((id) => id !== category.id)
+                    prevSelected.filter((id) => id !== category.id_category)
                   );
                 }}
                 className="text-[#3C6E71] ml-2"
@@ -98,6 +113,16 @@ const Category = () => {
         ))}
       </div>
 
+      {/* Botón de limpiar filtros */}
+      <div className="mt-6">
+        <button
+          onClick={clearFilters}
+          className="bg-[#3C6E71] text-white px-4 py-2 rounded"
+        >
+          Limpiar filtros
+        </button>
+      </div>
+
       {/* Mensaje de resultados encontrados */}
       <div className="mt-6 text-[#3C6E71] text-lg font-semibold">
         <p>
@@ -107,22 +132,11 @@ const Category = () => {
 
       {/* Mostrar los productos filtrados */}
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredProducts.map((product) => (
-          <div key={product.id} className="border p-4 rounded">
-            <h4 className="font-semibold text-lg">{product.name}</h4>
-            <p className="text-gray-500">{product.description}</p>
-          </div>
-        ))}
-      </div>
+        {filteredProducts.map((product) => {
+          console.log("Producto filtrado ID:", product.id);
 
-      {/* Botón de limpiar filtros */}
-      <div className="mt-6">
-        <button
-          onClick={clearFilters}
-          className="bg-[#3C6E71] text-white px-4 py-2 rounded"
-        >
-          Limpiar filtros
-        </button>
+          return <RecomendadosCard key={product.id} event={product} />;
+        })}
       </div>
     </div>
   );
