@@ -16,6 +16,9 @@ import AddFeature from "./views/Dashboard/components/ListFeatures/components/Add
 import Login from "./views/Auth/Login";
 import Category from "./Routes/Catogory";
 
+import CategoryForm from "./components/CategoryForm";
+import CategoryList from "./components/CategoryList";
+
 function App() {
   return (
     <Routes>
@@ -35,6 +38,11 @@ function App() {
           <Route path="caracteristicas" element={<Features />} />
           <Route path="caracteristicas/:id" element={<EditFeature />} />
           <Route path="agregar-caracteristica" element={<AddFeature />} />
+        {/* Administración de Categorías */}
+          <Route path="administrar-categorias" element={<CategoryForm />} />
+          <Route path="listar-categorias" element={<CategoryList />} />
+
+
         </Route>
       </Route>
     </Routes>
