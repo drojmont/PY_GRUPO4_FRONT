@@ -1,10 +1,32 @@
 import fotoFondo from "../assets/imagenBG.jpg";
 import fotoImage from "../assets/imagen-default.jpg";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import RecomendadosHome from "../views/Home/components/RecomendadosHome";
+import { useNavigate } from "react-router-dom";
 
 const Body = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch("http://localhost:8080/categorias")
+      .then((response) => response.json())
+      .then((data) => {
+        setCategories(data);
+      })
+      .catch((error) => console.error("Error obteniendo categorías:", error));
+  }, []);
+
+  const handleCategoryClick = (id_category) => {
+    if (id_category == null) {
+      console.error("No se pudo encontrar un ID de categoría válido");
+      return;
+    }
+    navigate(`/Category?filter=${id_category}`);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <section
@@ -19,7 +41,7 @@ const Body = () => {
         <div className="relative h-full max-w-6xl mx-auto px-4">
           <div className="h-full flex flex-col items-center justify-center space-y-8 pt-8">
             <div className="bg-white rounded-full px-6 py-2 shadow-lg mt-8 md:mt-0">
-              <h1 className="text-base md:text-lg text-[#3C6E71] font-medium text-center">
+              <h1 className="text-base md:text-lg text-[#3C6E71] font-medium text-center cursor-default">
                 Nuestras recomendaciones para tu próxima aventura
               </h1>
             </div>
@@ -48,37 +70,17 @@ const Body = () => {
 
                 {isOpen && (
                   <div className="absolute z-20 w-full md:w-48 bg-white rounded-lg shadow-lg py-2">
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                    >
-                      Conciertos
-                    </a>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                    >
-                      Festivales
-                    </a>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                    >
-                      Congresos
-                    </a>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                    >
-                      Conferencias
-                    </a>
-
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                    >
-                      Eventos
-                    </a>
+                    {categories.map((category) => (
+                      <button
+                        key={category.id_category}
+                        onClick={() =>
+                          handleCategoryClick(category.id_category)
+                        }
+                        className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      >
+                        {category.name}
+                      </button>
+                    ))}
                   </div>
                 )}
               </div>
