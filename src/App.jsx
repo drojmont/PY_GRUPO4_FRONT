@@ -8,6 +8,7 @@ import CreateProduct from "./views/Dashboard/components/AddProduct/components/Cr
 import ListProducts from "./views/Dashboard/components/ListProducts/ListProducts";
 import Register from "./views/Register";
 import EditProduct from "./views/Dashboard/components/AddProduct/components/EditProduct";
+import ListUsers from './views/Dashboard/components/ListUsers/ListUsers';
 
 import Features from "./views/Dashboard/components/ListFeatures/Features";
 import EditFeature from "./views/Dashboard/components/ListFeatures/components/EditFeature";
@@ -34,6 +35,10 @@ function App() {
           <Route path="caracteristicas" element={<Features/>}/>
           <Route path="caracteristicas/:id" element={<EditFeature />} />
           <Route path="agregar-caracteristica" element={<AddFeature />} />
+          <Route 
+        path="/administracion/listar-usuarios" 
+        element={<ListUsers />} 
+      />
         </Route>
       </Route>
     </Routes>

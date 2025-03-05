@@ -67,7 +67,7 @@ const Register = () => {
             const response = await axios.post(`${apiUrl}/api/user/registro`, formData);
 
             if (response.status === 201) {
-                navigate('/', { state: { message: '¡Registro exitoso!' } });
+                navigate('/login', { state: { message: '¡Registro exitoso!' } });
             }
         } catch (error) {
             if (error.response && error.response.data) {

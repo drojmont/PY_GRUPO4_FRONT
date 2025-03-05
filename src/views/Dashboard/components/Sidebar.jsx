@@ -9,7 +9,7 @@ import {
   AccordionBody,
 } from '@material-tailwind/react';
 import { HiOutlineInbox } from 'react-icons/hi2';
-import { LuShoppingBag } from 'react-icons/lu';
+import { LuShoppingBag, LuUsers } from 'react-icons/lu';
 import { RxExit } from 'react-icons/rx';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { Link, useLocation } from 'react-router';
@@ -29,6 +29,14 @@ const menuItems = [
       { text: 'Lista', route: 'listar-productos' },
       { text: 'Crear Nuevo', route: 'crear-producto' },
       { text: 'Caracteristicas', route: 'caracteristicas' },
+    ],
+  },
+  {
+    text: 'Usuarios',
+    icon: <LuUsers size={20} />,
+    route: null,
+    subItems: [
+      { text: 'Gestión de Usuarios', route: 'listar-usuarios' },
     ],
   },
   {
