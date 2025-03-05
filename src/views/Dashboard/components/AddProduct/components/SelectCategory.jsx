@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { getCategories } from '../../../../../services/categoryService';
+import { useEffect, useState } from "react";
+import { getCategories } from "../../../../../services/categoryService";
 
 export const SelectCategory = ({
   onGetCategory,
@@ -9,9 +9,9 @@ export const SelectCategory = ({
   error,
 }) => {
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [errorApi, setErrorApi] = useState('');
+  const [errorApi, setErrorApi] = useState("");
 
   // Cargar categorías al montar el componente
   useEffect(() => {
@@ -20,7 +20,7 @@ export const SelectCategory = ({
         const data = await getCategories();
         setCategories(data);
       } catch (error) {
-        console.error('Error al obtener las categorías:', error);
+        console.error("Error al obtener las categorías:", error);
         setErrorApi(error.message);
       } finally {
         setIsLoading(false);
@@ -32,7 +32,7 @@ export const SelectCategory = ({
   // Sincronizar el valor del select con valueCategoryModal
   useEffect(() => {
     if (valueCategoryModal) {
-      setSelectedCategory(valueCategoryModal);
+      setSelectedCategory(valueCategoryModal.name);
     } else if (initialData?.categoryOutputDTO?.name) {
       setSelectedCategory(initialData.categoryOutputDTO.name);
     }
@@ -45,7 +45,8 @@ export const SelectCategory = ({
     const category = categories.find((category) => category.name === value);
 
     if (category) {
-      onGetCategory(category.id_category);
+      //onGetCategory(category.id_category);
+      onGetCategory(category);
     }
 
     // Limpia el error de categoría si existe

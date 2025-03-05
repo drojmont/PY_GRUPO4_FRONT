@@ -15,7 +15,10 @@ import EditFeature from "./views/Dashboard/components/ListFeatures/components/Ed
 import AddFeature from "./views/Dashboard/components/ListFeatures/components/AddFeature";
 
 import Login from "./views/Auth/Login";
+import Category from "./Routes/Catogory";
 
+import CategoryForm from "./components/CategoryForm";
+import CategoryList from "./components/CategoryList";
 
 function App() {
   return (
@@ -23,6 +26,7 @@ function App() {
       {/* Rutas del Home */}
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
+        <Route path="/Category" element={<Category />} />
         <Route path="/Detail/:id" element={<Detail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -31,14 +35,16 @@ function App() {
           <Route index element={<AddProducts />} />
           <Route path="crear-producto" element={<CreateProduct />} />
           <Route path="listar-productos" element={<ListProducts />} />
-          <Route path="editar-producto/:id" element={<EditProduct/>}/>
-          <Route path="caracteristicas" element={<Features/>}/>
+          <Route path="editar-producto/:id" element={<EditProduct />} />
+          <Route path="caracteristicas" element={<Features />} />
           <Route path="caracteristicas/:id" element={<EditFeature />} />
           <Route path="agregar-caracteristica" element={<AddFeature />} />
-          <Route 
-        path="/administracion/listar-usuarios" 
-        element={<ListUsers />} 
-      />
+          <Route path="/administracion/listar-usuarios" element={<ListUsers />} />
+
+        {/* Administración de Categorías */}
+          <Route path="administrar-categorias" element={<CategoryForm />} />
+          <Route path="listar-categorias" element={<CategoryList />} />
+
         </Route>
       </Route>
     </Routes>
