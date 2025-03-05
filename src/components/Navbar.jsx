@@ -76,7 +76,12 @@ const Navbar = () => {
                 {userLogin?.user?.nombre?.charAt(0)}
               </button>
               {dropdownOpen && (
+                
                 <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2">
+                  <a href="/profile" className="flex block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">
+                    <HiOutlineUser size={25} />{" "}
+                    <span className="pl-2">Mi Perfil</span>
+                  </a>
                   <button
                     className="flex block w-full text-left px-4 py-2 text-red-600 hover:bg-red-100"
                     onClick={handleLogout}
