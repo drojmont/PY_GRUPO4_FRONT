@@ -1,19 +1,18 @@
-import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom"; // Importa useLocation para acceder a los parámetros de la URL
-import RecomendadosCard from "../views/Home/components/RecomendadosCard"; // Asegúrate de importar RecomendadosCard
+import { useState, useEffect, useContext } from "react";
+import { useLocation } from "react-router-dom";
+import RecomendadosCard from "../views/Home/components/RecomendadosCard";
+import { EventContext } from "../context/ProductContext";
 
 const Category = () => {
+  const { events, fetchEvents, isLoading } = useContext(EventContext);
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
-  // Acceder a los parámetros de la URL
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const filterParam = queryParams.get("filter");
 
-  // Obtener las categorías al cargar el componente
   useEffect(() => {
     fetch("http://localhost:8080/categorias")
       .then((response) => response.json())
@@ -23,57 +22,49 @@ const Category = () => {
       .catch((error) => console.error("Error obteniendo categorías:", error));
   }, []);
 
-  // Obtener todos los productos (sin filtro) al cargar el componente
   useEffect(() => {
-    fetch("http://localhost:8080/products")
-      .then((response) => response.json())
-      .then((data) => {
-        setProducts(data);
-        setFilteredProducts(data);
-      })
-      .catch((error) => console.error("Error obteniendo productos:", error));
+    fetchEvents();
   }, []);
 
-  // Aplicar filtro automáticamente si hay un parámetro "filter" en la URL
   useEffect(() => {
     if (filterParam) {
-      setSelectedCategories([parseInt(filterParam)]); // Convertimos el filtro a un número y lo agregamos a selectedCategories
+      setSelectedCategories([parseInt(filterParam)]);
     }
   }, [filterParam]);
 
-  // Función para manejar la selección de categorías
-  const handleCategoryChange = (categoryId) => {
-    setSelectedCategories((prevSelected) => {
-      if (prevSelected.includes(categoryId)) {
-        return prevSelected.filter((id) => id !== categoryId);
-      } else {
-        return [...prevSelected, categoryId];
-      }
-    });
-  };
-
-  // Función para aplicar el filtro de categorías automáticamente
+  // Filtrar los eventos según la categoría seleccionada
   useEffect(() => {
     if (selectedCategories.length === 0) {
-      setFilteredProducts(products);
+      setFilteredProducts(events);
     } else {
-      const filtered = products.filter((product) =>
-        selectedCategories.includes(product.categoria.id_category)
-      );
+      const filtered = events.filter((event) => {
+        // Console.log para comprobar si los productos tienen catagoria
+        console.log(
+          `Producto ID: ${event.id}, Categoría: ${
+            event.categoria ? event.categoria.name : "Sin categoría"
+          }`
+        );
+
+        return (
+          event.categoria &&
+          selectedCategories.includes(event.categoria.id_category)
+        );
+      });
       setFilteredProducts(filtered);
     }
-  }, [selectedCategories, products]);
+  }, [selectedCategories, events]);
 
-  // Función para limpiar los filtros
+  const handleCategoryChange = (categoryId) => {
+    setSelectedCategories((prevSelected) =>
+      prevSelected.includes(categoryId)
+        ? prevSelected.filter((id) => id !== categoryId)
+        : [...prevSelected, categoryId]
+    );
+  };
+
   const clearFilters = () => {
     setSelectedCategories([]);
   };
-
-  useEffect(() => {
-    if (products.length > 0) {
-      setFilteredProducts(products);
-    }
-  }, [products]);
 
   return (
     <div className="w-full mt-5 p-4 text-center">
@@ -125,18 +116,20 @@ const Category = () => {
 
       {/* Mensaje de resultados encontrados */}
       <div className="mt-6 text-[#3C6E71] text-lg font-semibold">
-        <p>
-          ¡Se encontraron {filteredProducts.length} resultados de su búsqueda!
-        </p>
+        {isLoading ? (
+          <p>Cargando eventos...</p>
+        ) : (
+          <p>
+            ¡Se encontraron {filteredProducts.length} resultados de su búsqueda!
+          </p>
+        )}
       </div>
 
       {/* Mostrar los productos filtrados */}
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredProducts.map((product) => {
-          console.log("Producto filtrado ID:", product.id);
-
-          return <RecomendadosCard key={product.id} event={product} />;
-        })}
+        {filteredProducts.map((event) => (
+          <RecomendadosCard key={event.id} event={event} />
+        ))}
       </div>
     </div>
   );
