@@ -5,34 +5,34 @@ const API_BASE_URL = 'http://localhost:8080/api';
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+  },
 });
 
 // Add request interceptor for logging
-apiClient.interceptors.request.use(config => {
+apiClient.interceptors.request.use((config) => {
   console.log('API Request:', {
     url: config.url,
     method: config.method,
-    headers: config.headers
+    headers: config.headers,
   });
   return config;
 });
 
 // Add response interceptor for logging
 apiClient.interceptors.response.use(
-  response => {
+  (response) => {
     console.log('API Response:', {
       data: response.data,
-      status: response.status
+      status: response.status,
     });
     return response;
   },
-  error => {
+  (error) => {
     console.error('API Error:', {
       message: error.message,
       response: error.response?.data,
-      status: error.response?.status
+      status: error.response?.status,
     });
     return Promise.reject(error);
   }
@@ -40,15 +40,16 @@ apiClient.interceptors.response.use(
 
 export const fetchUsers = async () => {
   try {
-    const token = localStorage.getItem('token');
+    const { token } = JSON.parse(localStorage.getItem('userGoTrip'));
+
     if (!token) {
       throw new Error('No authentication token found');
     }
 
-    const response = await apiClient.get('/user', {
+        const response = await apiClient.get('/user/listar', {
       headers: {
-        'Authorization': `Bearer ${token.trim()}`
-      }
+        Authorization: `Bearer ${token.trim()}`,
+      },
     });
 
     // Validate response structure
@@ -59,25 +60,24 @@ export const fetchUsers = async () => {
     // Log raw user data for debugging
     console.log('Fetched Users:', response.data);
 
-    return response.data.map(user => ({
+    return response.data.map((user) => ({
       id: user.id,
       username: user.nombre || 'Usuario sin nombre',
       email: user.correoElectronico || 'Email no disponible',
       role: user.role || 'CLIENT',
-      avatar: user.avatar || '/default-avatar.png'
+      avatar: user.avatar || '/default-avatar.png',
     }));
-
   } catch (error) {
     console.error('Detailed error fetching users:', {
       message: error.response?.data || error.message,
-      status: error.response?.status
+      status: error.response?.status,
     });
-    
+
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       window.location.href = '/login';
     }
-    
+
     throw error;
   }
 };
@@ -89,7 +89,7 @@ export const updateUserRole = async (userId, isAdmin) => {
   } catch (error) {
     console.error('Error updating user role:', {
       message: error.response?.data || error.message,
-      status: error.response?.status
+      status: error.response?.status,
     });
     throw error;
   }
