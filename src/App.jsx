@@ -19,6 +19,7 @@ import Category from "./Routes/Catogory";
 
 import CategoryForm from "./components/CategoryForm";
 import CategoryList from "./components/CategoryList";
+import Profile from "./views/Auth/Profile";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/Category" element={<Category />} />
         <Route path="/Detail/:id" element={<Detail />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/register" element={<Register />} />
         {/* Panel Administrador */}
         <Route path="/administracion" element={<Dashboard />}>
