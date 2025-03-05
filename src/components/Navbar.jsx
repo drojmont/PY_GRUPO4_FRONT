@@ -32,6 +32,7 @@ const Navbar = () => {
     localStorage.removeItem("token");
     setUserLogin(null);
     setToken(null);
+    window.location.href = '/';
   };
 
   return (
