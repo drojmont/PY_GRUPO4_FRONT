@@ -28,7 +28,7 @@ const Category = () => {
 
   useEffect(() => {
     if (filterParam) {
-      setSelectedCategories([parseInt(filterParam)]);
+      setSelectedCategories([Number(filterParam)]);
     }
   }, [filterParam]);
 
@@ -38,18 +38,14 @@ const Category = () => {
       setFilteredProducts(events);
     } else {
       const filtered = events.filter((event) => {
-        // Console.log para comprobar si los productos tienen catagoria
-        console.log(
-          `Producto ID: ${event.id}, Categoría: ${
-            event.categoria ? event.categoria.name : "Sin categoría"
-          }`
-        );
-
         return (
-          event.categoria &&
-          selectedCategories.includes(event.categoria.id_category)
+          event.categoryOutputDTO &&
+          selectedCategories.every(
+            (selectedId) => event.categoryOutputDTO.id_category === selectedId
+          )
         );
       });
+
       setFilteredProducts(filtered);
     }
   }, [selectedCategories, events]);
@@ -120,7 +116,8 @@ const Category = () => {
           <p>Cargando eventos...</p>
         ) : (
           <p>
-            ¡Se encontraron {filteredProducts.length} resultados de su búsqueda!
+            ¡Se encontraron {filteredProducts.length} productos de un total de{" "}
+            {events.length} disponibles!
           </p>
         )}
       </div>
