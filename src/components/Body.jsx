@@ -1,5 +1,8 @@
 import fotoFondo from "../assets/imagenBG.jpg";
 import fotoImage from "../assets/imagen-default.jpg";
+import imgDefault1 from "../assets/imgDefault1.jpg";
+import imgDefault2 from "../assets/imgDefault2.jpg";
+import imgDefault3 from "../assets/imgDefault3.jpg";
 import { useState, useEffect } from "react";
 import RecomendadosHome from "../views/Home/components/RecomendadosHome";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +28,12 @@ const Body = () => {
       return;
     }
     navigate(`/Category?filter=${id_category}`);
+  };
+
+  const defaultImages = [imgDefault1, imgDefault2, imgDefault3];
+
+  const getRandomDefaultImage = () => {
+    return defaultImages[Math.floor(Math.random() * defaultImages.length)];
   };
 
   return (
@@ -125,7 +134,7 @@ const Body = () => {
             >
               <div className="bg-gray-200 h-48 w-full">
                 <img
-                  src={category.imageUrl || fotoImage}
+                  src={category.imageUrl || getRandomDefaultImage()}
                   alt={category.name}
                   className="w-full h-full object-cover"
                 />
