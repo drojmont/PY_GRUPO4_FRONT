@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import logo from "../assets/logoApp.png";
 import { HiOutlineUser } from "react-icons/hi2";
 import { HiOutlineLogout } from "react-icons/hi";
+import { MdDashboard } from "react-icons/md";
 const Navbar = () => {
   const [userLogin, setUserLogin] = useState(null);
   const [token, setToken] = useState(null);
@@ -83,6 +84,17 @@ const Navbar = () => {
                     <HiOutlineUser size={25} />{" "}
                     <span className="pl-2">Mi Perfil</span>
                   </a>
+                  {userLogin.user.role === 'ADMIN' && (
+                    <Link 
+                      to="/administracion" 
+                      className="flex w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      <MdDashboard size={25} />{" "}
+                      <span className="pl-2">Administración</span>
+                    </Link>
+                  )}
+
                   <button
                     className="flex block w-full text-left px-4 py-2 text-red-600 hover:bg-red-100"
                     onClick={handleLogout}
