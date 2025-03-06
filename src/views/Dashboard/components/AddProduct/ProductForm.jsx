@@ -14,6 +14,56 @@ import { EventContext } from "../../../../context/ProductContext";
 
 const ProductForm = ({ onSubmit, initialData = {} }) => {
   const { events, fetchEvents } = useContext(EventContext);
+  const [availableFeatures, setAvailableFeatures] = useState([]); // Almacena las características disponibles
+  const [selectedFeatures, setSelectedFeatures] = useState([]); // Almacena las características seleccionadas
+  const [featureInput, setFeatureInput] = useState(""); // Para almacenar lo que el usuario escribe
+  const [filteredFeatures, setFilteredFeatures] = useState(availableFeatures); // Características filtradas
+
+  const handleFeatureSelect = (feature) => {
+    // Asegurarse de que no se repita la característica seleccionada
+    if (!selectedFeatures.find((f) => f.id === feature.id)) {
+      setSelectedFeatures((prevSelected) => [...prevSelected, feature]);
+  
+      // Filtrar la característica seleccionada de la lista filtrada
+      setFilteredFeatures((prevFiltered) =>
+        prevFiltered.filter((f) => f.id !== feature.id)
+      );
+    }
+    setFeatureInput(""); // Limpiar el campo de búsqueda
+  };
+  
+  const handleFeatureSearch = (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    setFeatureInput(searchTerm);
+  
+    // Filtrar las características que contienen el texto ingresado y que no están seleccionadas
+    const filtered = availableFeatures
+      .filter((feature) => feature.name.toLowerCase().includes(searchTerm))
+      .filter((feature) => !selectedFeatures.find((f) => f.id === feature.id));
+  
+    setFilteredFeatures(filtered);
+  };
+  
+const handleFeatureRemove = (id) => {
+  setSelectedFeatures((prevSelected) =>
+    prevSelected.filter((feature) => feature.id !== id)
+  );
+};
+
+
+    const fetchFeatures = async () => {
+    try {
+    const response = await fetch('http://localhost:8080/api/features'); // Reemplaza esta URL por la real
+    if (!response.ok) {
+      throw new Error('No se pudo obtener las características');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error al cargar las características', error);
+    throw error; // Esto permitirá que el error se propague a la función que lo llama
+  }
+};
 
   useEffect(() => {
     fetchEvents();
@@ -33,6 +83,7 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
     name: "",
     //price: '',
     description: "",
+    features: [],
   });
   const [error, setError] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -69,41 +120,70 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
       setSelectedCategory(initialData.categoryOutputDTO ?? null);
     }
   }, [initialData]);
+    // Cargar características desde la base de datos
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const data = await fetchFeatures(); // Asegúrate de que esta función obtenga las características correctamente
+          setAvailableFeatures(data); // Suponiendo que data es un array de objetos con { id, name }
+        } catch (error) {
+          console.error("Error al cargar las características", error);
+        }
+      };
+      fetchData();
+    }, []);
 
-  const handleInputsChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-
-    const updatedInputs = {
-      ...inputs,
-      [name]: value,
-      categoryId: selectedCategory,
-    };
-
-    setInputs(updatedInputs);
-
-    // Primero, validamos los campos y actualizamos los errores
-    let newErrors = validationCreateProduct(updatedInputs, selectedCategory);
-
-    // Verificamos si el nombre ya existe
-    if (name === "name") {
-      const nameExists = events.some(
-        (event) => event.name.toLowerCase() === value.toLowerCase()
-      );
-
-      if (nameExists) {
-        newErrors.nameRepeat = "El nombre ya está en uso";
+    const handleInputsChange = (e) => {
+      const name = e.target.name;
+      const value = e.target.value;
+    
+      const updatedInputs = {
+        ...inputs,
+        [name]: value,
+        categoryId: selectedCategory,
+      };
+    
+      setInputs(updatedInputs);
+    
+      // Primero, validamos los campos y actualizamos los errores
+      let newErrors = validationCreateProduct(updatedInputs, selectedCategory);
+    
+      // Verificamos si el nombre ya existe
+      if (name === "name") {
+        const nameExists = events.some(
+          (event) => event.name.toLowerCase() === value.toLowerCase()
+        );
+    
+        if (nameExists) {
+          newErrors.nameRepeat = "El nombre ya está en uso";
+        }
       }
-    }
-
-    const cleanedErrors = { ...error };
-    Object.keys(error).forEach((key) => {
-      if (!newErrors[key]) delete cleanedErrors[key];
-    });
-
-    // Actualizar el estado con los errores limpios
-    setError({ ...cleanedErrors, ...newErrors });
-  };
+      if (name === "features") {
+        // Convertimos el input en un array separando por comas
+        setInputs((prev) => ({
+          ...prev,
+          features: value.split(",").map((feature) => feature.trim()),
+        }));
+      } else {
+        setInputs((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
+      }
+    
+      // Validación de las características
+      if (!selectedFeatures.length) {
+        newErrors.features = "Debes seleccionar al menos una característica";
+      }
+    
+      const cleanedErrors = { ...error };
+      Object.keys(error).forEach((key) => {
+        if (!newErrors[key]) delete cleanedErrors[key];
+      });
+    
+      // Actualizar el estado con los errores limpios
+      setError({ ...cleanedErrors, ...newErrors });
+    };
   /* estefania
   const handleGetCategory = (id) => {
     setSelectedCategory(id);
@@ -163,13 +243,14 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
       }
 
       const imageUrls = [...existingImages, ...uploadedImages];
-
+      const featureIds = selectedFeatures.map((feature) => feature.id);
       const newProduct = {
         name: inputs.name,
         //price: inputs.price,
         description: inputs.description,
         images: imageUrls,
         categoryId: selectedCategory,
+        featureIds: featureIds,
       };
 
       console.log(newProduct);
@@ -187,6 +268,9 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
     }
   };
 
+
+
+  
   return (
     <div className="w-full mx-auto flex flex-col items-center pt-3">
       {/* Componente de las Imagenes */}
@@ -260,6 +344,54 @@ const ProductForm = ({ onSubmit, initialData = {} }) => {
                 {error.categoryId}
               </p>
             )}
+            <Typography variant="h6" color="blue-gray" className="-mb-3">
+  Características
+</Typography>
+
+{/* Campo de texto para escribir las características */}
+<input
+  type="text"
+  placeholder="Escribe una característica"
+  onChange={handleFeatureSearch}
+  value={featureInput}
+  className="placeholder:text-gray-500 border-2 rounded-lg py-2 px-4 focus:outline-none focus:border-teal-300"
+/>
+
+{/* Mostrar las características filtradas */}
+<div className="mt-2 max-h-40 overflow-auto border-2 rounded-lg py-2">
+  {filteredFeatures.map((feature) => (
+    <div
+      key={feature.id}
+      onClick={() => handleFeatureSelect(feature)}
+      className="cursor-pointer hover:bg-teal-200 p-2"
+    >
+      {feature.name}
+    </div>
+  ))}
+</div>
+
+{/* Características seleccionadas */}
+<div className="mt-4 flex flex-wrap gap-2">
+  {selectedFeatures.map((feature) => (
+    <span
+      key={feature.id}
+      className="bg-teal-200 text-teal-800 px-3 py-1 rounded-lg flex items-center"
+    >
+      {feature.name}{" "}
+      <button
+        onClick={() => handleFeatureRemove(feature.id)}
+        className="ml-2 text-red-500 hover:text-red-700"
+      >
+        x
+      </button>
+    </span>
+  ))}
+</div>
+
+
+
+
+
             <Typography variant="h6" color="blue-gray" className="-mb-3">
               Descripción
             </Typography>
