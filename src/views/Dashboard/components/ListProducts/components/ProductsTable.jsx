@@ -85,6 +85,7 @@ const ProductsTable = () => {
     const api = async () => {
       try {
         const response = await getProducts();
+        console.log("Respuesta del servicio:", response);
         setEvents([...response]);
       } catch (error) {
         console.error('Error fetching dentists:', error);
