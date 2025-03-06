@@ -18,12 +18,12 @@ import {
 
 const UsersTable = () => {
   const [users, setUsers] = useState([]);
-  console.log(users);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const [currentUsersPerPage, setCurrentUsersPerPage] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
 
   // Fetch users with improved error handling
   // const loadUsers = useCallback(async () => {
@@ -74,21 +74,38 @@ const UsersTable = () => {
   }, []);
 
   // Pagination effect
+  // useEffect(() => {
+  //   if (Array.isArray(users) && users.length > 0) {
+  //     const indexOfLastItem = currentPage * itemsPerPage;
+  //     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  //     const sortedUsers = [...users].sort((a, b) => a.id - b.id);
+  //     const updatedUsers = sortedUsers.slice(indexOfFirstItem, indexOfLastItem);
+  //     setCurrentUsersPerPage(updatedUsers);
+  //   } else {
+  //     setCurrentUsersPerPage([]);
+  //   }
+  // }, [users, currentPage, itemsPerPage]);
+
   useEffect(() => {
     if (Array.isArray(users) && users.length > 0) {
+      const hiddenSuperAdmin = users.filter(
+        (user) => user.email !== 'martinesrinconalejandra@gmail.com'
+      );
       const indexOfLastItem = currentPage * itemsPerPage;
       const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-      const sortedUsers = [...users].sort((a, b) => a.id - b.id);
+      const sortedUsers = hiddenSuperAdmin.sort((a, b) => a.id - b.id);
       const updatedUsers = sortedUsers.slice(indexOfFirstItem, indexOfLastItem);
       setCurrentUsersPerPage(updatedUsers);
+      setTotalPages(Math.ceil(hiddenSuperAdmin.length / itemsPerPage));
     } else {
       setCurrentUsersPerPage([]);
+      setTotalPages(0);
     }
   }, [users, currentPage, itemsPerPage]);
 
-  // Calculate total pages
-  const totalPages =
-    users.length > 0 ? Math.ceil(users.length / itemsPerPage) : 0;
+  // // Calculate total pages
+  // const totalPages =
+  //   users.length > 0 ? Math.ceil(users.length / itemsPerPage) : 0;
 
   // Handle admin permission toggle
   const handleAdminToggle = async (userId, currentRole) => {
