@@ -37,14 +37,11 @@ const Category = () => {
     if (selectedCategories.length === 0) {
       setFilteredProducts(events);
     } else {
-      const filtered = events.filter((event) => {
-        return (
+      const filtered = events.filter(
+        (event) =>
           event.categoryOutputDTO &&
-          selectedCategories.every(
-            (selectedId) => event.categoryOutputDTO.id_category === selectedId
-          )
-        );
-      });
+          selectedCategories.includes(event.categoryOutputDTO.id_category)
+      );
 
       setFilteredProducts(filtered);
     }
