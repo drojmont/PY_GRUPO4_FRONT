@@ -32,7 +32,7 @@ const Category = () => {
     }
   }, [filterParam]);
 
-  // Filtrar los eventos según la categoría  seleccionada
+  // Filtrar los eventos según la categoría seleccionada
   useEffect(() => {
     if (selectedCategories.length === 0) {
       setFilteredProducts(events);
